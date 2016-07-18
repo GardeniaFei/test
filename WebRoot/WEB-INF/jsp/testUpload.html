@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>测试上传图片</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <#include "/WEB-INF/jsp/common/header.html">
+
+  </head>
+  
+  <body>
+  <div class="row">
+  	<div class="col-md-6 col-md-offset-3">
+	  		<h1 class="text-center">上传文件模拟</h1>
+	  	</div>
+	  	
+	  	<div class="col-md-6 col-md-offset-3">
+	  	<br>
+	  	</div>
+	  	
+	  <div class="col-md-6 col-md-offset-3">
+	   <form class="form-horizontal"  enctype="multipart/form-data" method="post" action="${base}/interface/common/uploadImg">
+	  	<div class="form-group">
+	  	   <label for="exampleInputName2">分发Id：</label>
+		   <input type="text" id="distrId" name="distrId" value="${distrId!}">
+		   
+		   <br><br>
+		   <label for="exampleInputName2">任务id：</label>
+		   <input type="text" id="taskId" name="taskId" value="${taskId!}">
+		   
+		   <br><br>
+		   <label for="exampleInputName2">事项id：</label>
+		   <input type="text" id="itemId" name="itemId" value="${itemId!}">
+		   
+		   <br><br>
+		   <label for="exampleInputName2">sid：</label>
+		   <input type="text" id="sid" name="sid" value="${sid!}">
+		   <br><br>
+		   
+		   <label for="exampleInputFile">图标：</label>
+		   <input type="file" id="exampleInputFile" name="file">
+		   <p class="help-block"><span style="font-size:0.5em;color:red">（*图片大小请不要超过2M，支持png,jpg文件）</span></p>
+		   <button type="submit" class="btn btn-info">上传图片</button>
+		   <p><img id="img1" alt="上传的图片显示位置" src="${base}/img/icon?imageName=11" /></p>
+		   <br><br>
+		   
+		   
+	     </div>
+	    </form>
+	   </div>
+   </div>
+  </body>
+  <script src="${base}/resources/js/ajaxfileupload.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  //上传图片
+	function ajaxFileUpload() {
+		if(!checkImageExt("exampleInputFile")){
+			return;
+		}
+		var distrId = $("#distrId").val();//分发Id
+		var taskId = $("#taskId").val();//任务id
+		var itemId = $("#itemId").val();//事项id
+		var sid = $("#sid").val();
+		var data1 = "{ distrId: "+ distrId + ", taskId:" + taskId + ", itemId:" + itemId +" }";
+		alert(data1);
+		var exampleInputFile = $("#exampleInputFile").val();
+		if(!validate_required(exampleInputFile)){
+			alert("请选择要上传的图片!");
+			return;
+		}
+            $.ajaxFileUpload
+            (
+                {
+                    url: '${base}/common/uploadImg', //用于文件上传的服务器端请求地址
+                    type: 'post',
+                    data: data1,//{ distrId: '123', taskId: 'lunis' } //此参数非常严谨，写错一个引号都不行
+                    secureuri: false, //一般设置为false
+                    fileElementId: 'exampleInputFile', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                    dataType: 'json', //返回值类型 一般设置为json
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+                        $("#img1").attr("src", "${base}/img/icon?imageName="+data.imageName);
+                        if (typeof (data.error) != 'undefined') {
+                            if (data.error != '') {
+                                alert(data.result);
+                            } else {
+                                alert(data.result);
+                            }
+                        }
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        alert(e);
+                    }
+                });            
+        }
+       //检测文件格式
+	function checkImageExt(eleId) {
+			var _file = document.getElementById(eleId);
+			var i = _file.value.lastIndexOf('.');
+			var len = _file.value.length;
+			var extEndName = _file.value.substring(i + 1, len);
+			var extName = "GIF,BMP,JPG,JPEG,PNG";//首先对格式进行验证
+			if (extName.indexOf(extEndName.toUpperCase()) == -1) {
+				alert("*您只能输入" + extName + "格式的文件");
+				return false;
+			} else {
+				return true;
+			}
+	}
+	
+	//检测是否为空
+	function validate_required(string) {
+		if (string == null || string == "") {
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>企业新增事项列表</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   
+   <style>
+   #tddept{
+    	width:25%;
+    }
+   </style>
+   </head>
+    
+  <body class="main page" >
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=1/>
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li><a href="${base}/companyManage">企业管理</a></li>
+				<li class="title"><span>企业新增事项列表 : ${bussName!}</span></li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">选择部门：</label>
+				    	<select class="form-control" id="idDept">
+						  <option value="">--请选择--</option>
+						  <#if deptList??>
+						  	<#list deptList as dept>
+						  		<option value="${dept.departId!}">${dept.departName!}</option>
+						  	</#list>
+						  </#if>
+						</select>
+				  </div>
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filterDistr()">
+					    	筛选
+					    </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th>序列号</th>
+		  				  <th>事项Id</th>
+						  <th>事项名称</th>
+						  <th>办理人</th>
+						  <th>事项状态</th>
+						  <th id="tddept">事项描述</th>
+						  <th>办理时间</th>
+						  <th>事项类型</th>
+						  <th>省办企业联系人</th>
+						  <th>职位</th>
+						  <th>电话</th>
+						  <th>省办事项流水号</th>
+						  <th>联系人地址</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if bItems??>
+		  					<#list bItems as bitem>
+		  						<#if bitem_index % 4 == 0>
+									<tr class="success">
+								<#elseif bitem_index % 4 == 1>
+									<tr class="warning">
+								<#elseif bitem_index % 4 == 2>
+									<tr class="danger">
+								<#elseif bitem_index % 4 == 3>
+									<tr class="info">
+								</#if>
+								  <td>${bitem_index+1!}</td>
+								  <td>${bitem.bitem_id!}</td>
+								  <td>${bitem.bItem_name!}</td>
+								  <td>${bitem.vuser_code!}</td>
+								   <td>
+									   <#if bitem.btran_status == 0>
+									   未签收
+									   <#elseif bitem.btran_status == 1>
+									   已签收
+									   <#elseif bitem.btran_status == 2>
+									   被退回
+									   </#if>
+								   </td>
+								    <td id="tddept">
+								    <#if bitem.bitem_describe??>
+								    ${bitem.bitem_describe!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								     <td>${bitem.creat_time!}</td>
+								     <td>
+								     <#if bitem.bitem_type??>
+									     <#if bitem.bitem_type == 1>
+										   省办事项
+										   <#elseif bitem.bitem_type == 2>
+										   企业事项
+										   </#if>
+									</#if>
+								    </td>
+								     <td>
+								    <#if bitem.province_user_name??>
+								    ${bitem.province_user_name!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								    <td>
+								    <#if bitem.province_user_position??>
+								    ${bitem.province_user_position!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								    <td>
+								    <#if bitem.province_user_tel??>
+								    ${bitem.province_user_tel!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								    <td>
+								    <#if bitem.province_item_serial??>
+								    ${bitem.province_item_serial!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								    <td>
+								    <#if bitem.province_user_addresss??>
+								    ${bitem.province_user_addresss!}
+								    <#else>
+								    无
+								    </#if>
+								    </td>
+								</tr>
+							</#list>
+						</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (bItemPage.getList().size()> 0) >
+	  				<#if bussId??>
+	  					<@paginate currentPage=bItemPage.pageNumber totalPage=bItemPage.totalPage actionUrl="${base}/bItemList?businessId=${bussId!}&page="/>
+	  				</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/bItemList?businessId=${bussId!}&page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  
+<script type="text/javascript">
+</script>
+</html>

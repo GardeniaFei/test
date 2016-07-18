@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>修改密码</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=0/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/">首页</a></li>
+				<li class="title"><span>系统管理员修改密码</span></li>
+			</ul>
+		</section>
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>修改密码</h2>
+					<#if message??>
+						<span style="font-size:24px;color:red">(提示：${message!})</span>
+					</#if>
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal" id="resetPwdForm" action="${base}/admin/resetAdminPwd"
+				method="post" id="addUserForm">
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">旧密码：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="password" value=""
+							name="oldPwd" id="oldPwd" placeholder="请输入旧密码">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">重置密码：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="password" value="" name="pwd"
+							id="newPwd" placeholder="请用户设置新密码">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">确认密码：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="password" value="" name="isPwd"
+							id="isPwd" placeholder="请再次输入新密码">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a href="${base}/admin/resetPwdShow" class="btn btn-success"
+							role="button">重置</a>
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="rebtn"
+							value="修改" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" id="back">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var a=0;
+		$("#back").on("click", function(){
+		  var url ="${base}/";
+		  var r=confirm("确定取消修改密码吗？");
+		  if (r==true)
+		    {
+		    	location.href=url;
+		    }
+	    });
+	    
+	    $("#rebtn").on("click",function(){
+	    	reset();
+	    });
+	    
+	    $("#oldPwd").on("blur",function(){
+	    	var oldPwd = $(this).val();
+	    	checkPwd(oldPwd);
+	    });
+	
+	   function reset(){
+	   		var oldPwd = $("#oldPwd").val();
+	   		if(!validate_required(oldPwd)){
+	   			alert("请输入旧密码！");
+	   			return;
+	   		}else{
+	   			if(a==0){
+	   				alert("旧密码错误！");
+	   				return;
+	   			}
+	   		}
+	   		var newPwd = $("#newPwd").val();
+	   		var isPwd = $("#isPwd").val();
+	   		if(!validate_required(newPwd)){
+	   			alert("请输入新密码！");
+	   			return;
+	   		}else if(newPwd.length>20){
+	   			alert("新密码不能超过20个字符！");
+	   			return;
+	   		}
+	   		if(newPwd==oldPwd){
+	   			alert("新密码和旧密码不能相同！");
+	   			return;
+	   		}
+	   		if(!validate_required(isPwd)){
+	   			alert("请输入确认密码！");
+	   			return;
+	   		}
+	   		if(newPwd!=isPwd){
+	   			alert("新密码和确认密码不一致！");
+	   			return;
+	   		}
+	   		document.getElementById("resetPwdForm").submit();
+	   }
+	   function checkPwd(str){
+	          //alert("检测密码"+str);
+	   		  var checkUrl = "${base}/admin/CheckOldPwd?oldPwd="+str;
+	   			 $.ajax({
+	               type: "GET",
+	               url: checkUrl,
+	               dataType: "json",
+	               success: function(data){
+		                  var message = data.message;
+		                  if(message=="1"){
+		                    a=1;
+		                    //alert("密码返回正确！");
+		                  }else if(message=="0"){
+		                    a=0;
+		                    //alert("旧密码返回错误,请重试!");
+		                  }
+	                  },
+	                error:function(str){
+                	 result = false;
+                  	 alert("服务器故障，请重试！");
+                  }
+			    });
+	   }
+	   //不能为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	});
+	</script>
+</body>
+</html>

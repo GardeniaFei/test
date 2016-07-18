@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>用户管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+    <#include "/WEB-INF/jsp/common/header.html">
+    
+    <style type="text/css">
+    th,td {
+       text-align:center;
+       height:40px;
+    }
+    .nameDiv>input{
+    	margin:auto;
+		width:70%;
+    }
+    .orderNub{
+    	 width:60px;
+    }
+    .gone{
+    	display:none;
+    }
+    .show{
+    	display:block;
+    }
+    .margin{
+    	margin-top:20px;
+    	padding-top:0px;
+    }
+    #tddept{
+    	width:30%;
+    }
+    </style>
+  </head>
+  <body class="main page" onload="show('${dataSrc!}', '${roleType!}', '${departId!}', '${phoneNum!}', '${userName!}', '${bussName!}', '${userAccount!}','${departIdByCity!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=0/>
+  	    
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>用户管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid" id="tableAll">
+	  			<div class="panel-heading" style="height:auto;padding-top:0px;">
+		  			<form class="form-inline" id="idFilter" action="${base}/user/filterUser" method="post">
+					  <div class="form-group margin" id="dsrc">
+					    <label for="exampleInputEmail2">数据来源：</label>
+					    <select class="form-control" id="dataSource">
+						  <option value="1" selected="selected">审批接口</option>
+						  <option value="2">本地库</option>
+						</select>
+					  </div>
+			 		  <div class="form-group margin" id="role">
+					    <label for="exampleInputName2">&nbsp;&nbsp;用户类型：</label>
+					    	<select class="form-control" id="roleType">
+							  <option value="" style="display:none;">--请选择--</option>
+							  <option value="1" >区级办事人员</option>
+							  <option value="2" style="display:none;">领导</option>
+							  <option value="3" style="display:none;">企业</option>
+							  <option value="4" style="display:none;">市级办事员</option>
+							  <option value="5" >区级政务办</option>
+							</select>
+					  </div>
+					  <div class="form-group margin" id="dept">
+					    <label for="exampleInputEmail2">&nbsp;&nbsp;选择部门：</label>
+					    <select class="form-control" id="departId">
+							  <option value="">--请选择--</option>
+							  <#if deptList??>
+							  	<#list deptList as dept>
+							  		<option value="${dept.departId!}">${dept.departName!}</option>
+							  	</#list>
+							  </#if>
+							</select>
+					  </div>
+					  <div class="form-group margin" id="deptByCity" style="display:none;">
+					    <label for="exampleInputEmail2">&nbsp;&nbsp;选择市级部门：</label>
+					    <select class="form-control" id="departIdByCity">
+							  <option value="">--请选择--</option>
+							  <#if cityDptList??>
+							  	<#list cityDptList as cdept>
+							  		<option value="${cdept.departId!}">${cdept.departName!}</option>
+							  	</#list>
+							  </#if>
+							</select>
+					  </div>
+					  
+					  <div class="form-group margin" id="name">
+					    <label for="exampleInputName3">&nbsp;&nbsp;用户姓名：</label>
+					    <input class="form-control" type="text" id="idName" placeholder="输入姓名">
+					  </div>
+					  <div class="form-group margin" id="business" style="display:none;">
+					    <label for="exampleInputName3">&nbsp;&nbsp;企业名称：</label>
+					    <input class="form-control" type="text" id="idBusiness" placeholder="输入企业名称">
+					  </div>
+					  <div class="form-group margin" id="phone" style="display:none;">
+					    <label for="exampleInputName3">&nbsp;&nbsp;手机号码：</label>
+					    <input class="form-control" type="text" id="idPhone" placeholder="输入手机号">
+					  </div>
+					  <div class="form-group margin" id="account">
+					    <label for="exampleInputName3">&nbsp;&nbsp;用户账号：</label>
+					    <input class="form-control" type="text" id="idAccount" placeholder="输入账号">
+					  </div>
+					  
+					  
+					  <div class="form-group margin">
+					    <label for="exampleInputEmail2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					    <div class="btn-group" role="group" aria-label="...">
+						  	<a class="btn btn-info" type="button" onclick="filter();">
+						    	筛选
+					  		</a>
+					  		<a class="btn btn-success" type="button" href="${base}/user/toAddView">
+						          	添加非办事员用户
+						    </a>
+						    <a class="btn btn-primary" type="button" href="${base}/user/toAddCityView">
+						          	添加市级办事员用户
+						    </a>
+						</div>
+					  </div>
+		  			</form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>姓名</th>
+						  <th>账号</th>
+						  <th>邮箱</th>
+						  <th>用户类型</th>
+						  <th>用户权限</th>
+						  <th id="tddept">所属部门</th>
+						  <th>所属企业</th>
+						  <th style="text-align:center">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+						<#if userList??>
+							<#list userList as user>
+								<#if user_index % 4 == 0>
+									<tr class="success">
+								<#elseif user_index % 4 == 1>
+									<tr class="warning">
+								<#elseif user_index % 4 == 2>
+									<tr class="danger">
+								<#elseif user_index % 4 == 3>
+									<tr class="info">
+								</#if>
+								  <td class="orderNub">${user_index+(usersPage.pageNumber-1)*10+1!}</td>
+								  <td>
+									  <div class="nameDiv">
+									  	<#if user.roleType==2||user.roleType==3||user.roleType==4>
+									  		<label class="name-label">${user.userName!}</label>
+									  		<input type="hidden" value="${user.userId!}">
+									  		<input type="text" class="name-input" style="width:100px; height:30px; text-align:center; display:none;"
+									  	 		value="${user.userName!}"/>
+									  	 <#else>
+									  	 		<label>${user.userName!}</label>
+									  	 </#if>
+								  	  </div>
+								  </td>
+								  <td>${user.userAccount!}</td>
+								  
+								  <#if user.userEmail??>
+								  	<td>${user.userEmail!}</td>
+								  <#else>
+								  	<td>---</td>
+								  </#if>
+								  
+								  <td>
+								  	<#if user.roleType == 1>
+								  		区级办事员
+								  	<#elseif user.roleType == 2>
+								  		领导
+								  	<#elseif user.roleType == 3>
+								  		企业
+								  	<#elseif user.roleType == 4>
+								  		市级办事员
+								  	<#elseif user.roleType == 5>
+								  		区级政务办
+								  	</#if>
+								  </td>
+								   <td>
+								   <#if user.authority??>
+									  	<#if user.authority == 1>
+									  		VIP服务专员管理员
+									  	<#elseif user.authority == 2>
+									  		VIP服务专员权限
+									  	<#elseif user.authority == 3>
+									  		单位首席权限
+									  	<#elseif user.authority == 4>
+									  		部门跟办人
+									  	<#elseif user.authority == 5>
+									  		市级服务专员权限
+									  	<#elseif user.authority == 6>
+									  		 VIP服务专员管理员+单位首席权限
+									  	<#elseif user.authority == 7>
+									  		 VIP服务专员+单位首席权限
+									  	</#if>
+									 <#else>
+									  	---
+									 </#if>
+								  </td>
+								  
+								  <#if user.departName??>
+								  	<td id="tddept">${user.departName!}</td>
+								  <#else>
+								  	<td id="tddept">---</td>
+								  </#if>
+								  
+								  <#if user.bussInfo??>
+								  	<td>${user.bussInfo.businessName!}</td>
+								  <#else>
+								  	<td>--</td>
+								  </#if>
+								  
+								  <td class="action" style="text-align:center">
+								  	<input type="hidden" value="${user.roleType!}">
+								  	<#if (user.roleType == 2)||(user.roleType == 3)||(user.roleType == 4)>
+										  <a class="btn btn-info" data-toggle="modal" title="Zoom" data-target="#exampleModal" 
+										  data-whatever="${user.userName!}" data-backdrop="${user.userId!}">
+											<i class="icon-edit"></i>&nbsp;&nbsp;重置密码
+										 </a>
+										  <a class="btn btn-danger" data-toggle="tooltip" onclick="disp_confirm('${user.userId}')" title="Zoom">
+										  	<i class="icon-trash"></i>&nbsp;&nbsp;禁用
+										  </a>
+									  <#elseif user.roleType == 5>
+										  <a type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal2" 
+										  	data-whatever="${user.userName!}" data-backdrop="${user.userAccount!}" data-backdrop2="${user.authority!}">
+										  		设置VIP权限
+										  </a>
+									  <#else>
+								  	</#if>
+								  </td>
+								</tr>
+							</#list>
+						</#if>
+		  			</tbody>
+	  			</table>
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (usersPage.getList().size()> 0) >
+		  			   	<#if roleType??>
+		  			   			<#if departId??>
+				  			   		<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+				  			   		actionUrl="${base}/user/filterUser?departId=${departId!}&dataSource=${dataSrc!}&roleType=${roleType!}&page="/>
+				  			   	<#else>
+				  			   		<#if departIdByCity??>
+					  			   		<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+					  			   		actionUrl="${base}/user/filterUser?departIdByCity=${departIdByCity!}&dataSource=${dataSrc!}&roleType=${roleType!}&page="/>
+					  			   	<#else>
+					  			   		<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+					  			   		actionUrl="${base}/user/filterUser?roleType=${roleType!}&dataSource=${dataSrc!}&page="/>
+				  			   		</#if>
+			  			   		</#if>
+			  			<#else>
+			  				<#if departId??>
+					  			<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+			  			   		actionUrl="${base}/user/filterUser?departId=${departId!}&dataSource=${dataSrc!}&page="/>
+				  			<#else>
+				  				<#if departIdByCity??>
+						  			<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+				  			   		actionUrl="${base}/user/filterUser?departIdByCity=${departIdByCity!}&dataSource=${dataSrc!}&page="/>
+					  			<#else>
+					  				<@paginate currentPage=usersPage.pageNumber totalPage=usersPage.totalPage 
+					  				actionUrl="${base}/user/initUsers?dataSource=${dataSrc!}&page="/>
+					  			</#if>
+				  			</#if>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/user/initUsers?dataSource=${dataSrc!}&page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	
+  	<!-- 弹框内容重置密码-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">重置用户密码</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline" id="comfrom">
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">设置密码:</label>
+	            <input type="password" class="form-control" id="pwd" placeholder="请输入密码" style="width:500px">
+	          </div>
+	          <div class="form-group" >
+	             <label for="message-text" class="control-label">&nbsp;</label>
+	          </div>
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">确认密码:</label>
+	            <input type="password" class="form-control" id="isPwd" placeholder="请再次输入密码" style="width:500px">
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">确定</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+<!-- 弹框内容设置vip权限-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">设置VIP权限</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消设置</button>
+        <button id="serAdmin" type="button" class="btn btn-primary">设置为VIP服务专员</button>
+        <button id="serManage" type="button" class="btn btn-primary">设置为VIP服务专员管理员</button>
+        <button id="setNoVip" type="button" class="btn btn-primary">取消VIP权限</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
+  	<script type="text/javascript">
+  	$(document).ready(function(){
+  	
+  		$("#dataSource").on("change", function() {
+  			var dataSrc = $("#dataSource").val();
+  			
+			if(dataSrc == "1") {
+				//alert("选择审批接口" + dataSrc);
+				$("#roleType").find("option").eq(0).removeAttr("selected");
+			    $("#roleType").find("option").eq(1).css("display","block");
+				$("#roleType").find("option").eq(1).attr("selected","selected");
+			    $("#roleType").find("option").eq(1).siblings().css("display","none");
+			    $("#roleType").find("option").eq(5).css("display","block");
+				$("#roleType").find("option").eq(5).attr("selected","selected");
+			    $("#roleType").find("option").eq(5).siblings().css("display","none");
+				$("#dept").show();
+				$("#deptByCity").hide();//市级部门
+				$("#phone").hide();
+				$("#role").hide();
+				$("#business").hide();
+				$("#account").show();
+				$("#name").hide();
+			}else if(dataSrc == "2") {
+				//alert("选择本地库" + dataSrc);
+	    		document.getElementById("idAccount").value = "";
+	     		$("#roleType").find("option").eq(1).css("display","none");//区级办事人员隐藏
+	     		$("#roleType").find("option").eq(5).css("display","none");//区级政务办办事人员隐藏
+	     		$("#roleType").find("option").eq(2).css("display","block");
+	     		$("#roleType").find("option").eq(3).css("display","block");
+	     		$("#roleType").find("option").eq(4).css("display","block");
+				$("#dept").hide();
+				$("#phone").show();
+				$("#role").show();
+				$("#business").show();
+				$("#account").hide();
+				$("#name").show();
+			}
+  		});
+  	
+  		$("#roleType").on("change", function() {
+  			var dataSrc = $("#dataSource").val();
+  			var roleType = $("#roleType").val();
+  			if(dataSrc == "2") {
+				//alert("选择本地库" + dataSrc);
+				if(roleType == "" || roleType == 3) {
+					$("#business").show();
+					$("#deptByCity").hide();//市级部门
+				}else if(roleType == 2) {
+					$("#business").hide();
+					$("#deptByCity").hide();//市级部门
+				}else if(roleType == 4) {
+					$("#business").hide();
+					//选择市级部门
+					$("#deptByCity").show();//市级部门
+				}
+			}
+  		});
+  	
+  		$(".name-label").on("dblclick", function(){
+  			$(this).hide();
+  			$(this).parent().find("input").show();
+  			$(this).parent().find("input").focus();
+  		});
+  		
+  		$(".name-input").on("blur", function(){
+  			var name = $(this).val();
+  			var nameOld = $(this).parent().find("label").html();
+  			var id = $(this).parent().find("input").val();
+  			if(name==null||name==""){
+  				 var changeUrl = "${base}/user/resetUserName?userId="+id+"&userName="+nameOld;
+  			}else{
+  				var changeUrl = "${base}/user/resetUserName?userId="+id+"&userName="+name;
+  			}
+  				$(this).parent().find("label").text(name);
+  				//跳转后台保存数据
+			     $.ajax({
+	               type: "GET",
+	               url: changeUrl,
+	               dataType: "json",
+	               success: function(data){
+		                  var message = data.message;
+		                  if(message=="1"){
+		                    //alert("修改姓名成功!");
+		                  }else if(message=="0"){
+		                    alert("修改姓名失败,请重试!");
+		                  }
+		                  window.location.reload();
+	                  }
+			    });
+			  
+  			//$(this).hide();
+  			//$(this).parent().find("label").show();
+  		});
+  	});
+  	
+  		//重置密码modal
+  		$('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget);
+		  var recipient = button.data('whatever');
+		  var userId = button.data('backdrop');//传递的参数
+		  var modal = $(this);
+		  
+		  modal.find('.modal-title').text(recipient + '重置密码');
+		  //跳转用ajax异步加载
+		  document.getElementById("links").onclick=function(){
+									  var pwd = document.getElementById("pwd").value;
+									  var isPwd = document.getElementById("isPwd").value;
+									  if (!validate_required(pwd)) {
+											alert("请填入密码！");
+											return;
+										}else{
+											if(pwd.length>20){
+												alert("密码不能超过20个字符！");
+												return;
+											}
+										}
+							
+										if (!validate_required(isPwd)) {
+											alert("请输入确认密码！");
+											return;
+										}
+							
+										if (isPwd != pwd) {
+											alert("两次密码不一样，请重新输入！");
+											return;
+										}
+									  change(pwd,userId);
+									  
+									  };
+		});
+		 //修改密码跳转
+		  function change(pwd,userId){
+		     var changeUrl = "${base}/user/resetPwd?userId="+userId+"&pwd="+pwd;
+		     $.ajax({
+               type: "GET",
+               url: changeUrl,
+               dataType: "json",
+               success: function(data){
+	                  var message = data.message;
+	                  if(message=="1"){
+	                    alert("重置密码成功!");
+	                  }else if(message=="0"){
+	                    alert("重置失败,请重试!");
+	                  }
+	                 // window.location.href= "${base}/user/initUsers";
+	                 window.location.reload();
+                  }
+		    });
+		   }
+		//不能为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		//筛选
+        function filter() {
+        	//alert("test");
+        	var roleType = document.getElementById("roleType").value;
+        	var departId = document.getElementById("departId").value;
+        	var departIdByCity = document.getElementById("departIdByCity").value;
+        	var dataSrc = document.getElementById("dataSource").value;
+        	var phoneNum = document.getElementById("idPhone").value;
+        	
+        	var userName = document.getElementById("idName").value;
+        	var bussName = document.getElementById("idBusiness").value;
+        	var userAccount = document.getElementById("idAccount").value;
+        	var url ="${base}/user/filterUser?dataSource=" + dataSrc;
+        	
+        	if(roleType == "" && departId == "") {
+        		url = url;
+        	}else if(roleType != "" && departId != "") {
+        		url = url + "&roleType=" + roleType + "&departId=" + departId;
+        	}else if(roleType != "") {
+        		url = url + "&roleType=" + roleType;
+        	}else {
+        		url = url + "&departId=" + departId;
+        	}
+        	
+        	if($.trim(userName) != "") {
+        		url = url + "&userName=" + $.trim(userName);
+        	}
+        	
+        	if($.trim(bussName) != "") {
+        		url = url + "&bussName=" + $.trim(bussName);
+        	}
+        	
+        	if($.trim(userAccount) != "") {
+        		url = url + "&userAccount=" + $.trim(userAccount);
+        	}
+        	//判断市级部门筛选条件
+        	if($.trim(departIdByCity) != "") {
+        		url = url + "&departIdByCity=" + $.trim(departIdByCity);
+        	}
+        	
+        	if(dataSrc == 2 && $.trim(phoneNum) != "") {
+	        	if(checkPhone($.trim(phoneNum))) {
+	        		url += "&phoneNum=" + $.trim(phoneNum);
+	        		location.href = url;
+	        	}else {
+	        		alert("必须输入正确的手机号码格式");
+	        	}
+        	}else {
+        		location.href = url;
+        	}
+        }
+		//检查手机号码
+		function checkPhone(str){
+			var reg = /^[0-9]*$/;
+			return reg.test(str);
+		}
+		
+	//设置签收人
+	function set_signMan(userCode,deptId)
+	{
+	  	 var r=confirm("确认要设置签收人吗？");
+	  	 var url2 = "${base}/setSignMan?userId="+userCode+"&departId="+deptId;
+	  	 if (r==true)
+	    {
+	  		 $.ajax({
+	               type: "GET",
+	               url: url2,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="2"){
+	               		 	alert("设置失败，请重试！");
+	               		 }else if(message=="1"){
+	               		   alert("设置成功！");
+	               		 }else{
+	               		 	alert("网络异常，请重试！");
+	               		 }
+	               		  window.location.reload();
+	               	   }
+	      	});
+	      }
+	}
+	//设置多部门签收人
+	function setSignManMDept(userCode)
+	{
+	  	 var r=confirm("确认要设置多部门签收人吗？");
+	  	 var url2 = "${base}/setSignManMDept?userId="+userCode;
+	  	 if (r==true)
+	    {
+	  		 $.ajax({
+	               type: "GET",
+	               url: url2,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="2"){
+	               		 	alert("设置失败，请重试！");
+	               		 }else if(message=="1"){
+	               		   alert("设置成功！");
+	               		 }else{
+	               		 	alert("网络异常，请重试！");
+	               		 }
+	               		  window.location.reload();
+	               	   }
+	      	});
+	      }
+	}
+	
+	//取消多部门签收人
+	function cancleSignManMDept(userCode)
+	{
+	  var url1 = "${base}/cancleSignManMDept?userCode="+userCode;
+	  var r=confirm("确认要取消签收人吗？");
+	  if (r==true)
+	    {
+	 		 $.ajax({
+	               type: "GET",
+	               url: url1,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="4"){
+	               		 	alert("取消失败，请重试！");
+	               		 	
+	               		 }else if(message=="1"){
+	               		   alert("取消成功！");
+	               		   
+	               		 }else if(message=="2"){
+	               		 	alert("该用户不为签收人，或者该用户部门不存在！");
+	               		 	
+	               		 } else if(message=="3"){
+	               		 	alert("该用户还有事项未办理完，不能取消！");
+	               		 	
+	               		 }
+	               		  window.location.reload();
+	               	   }
+	      	});
+	     }
+	}
+	
+	//取消签收人
+	function cancle_signMan(userCode,deptId)
+	{
+	  var url1 = "${base}/cancleSignMan?departId="+deptId+"&userCode="+userCode;
+	  var r=confirm("确认要取消签收人吗？");
+	  if (r==true)
+	    {
+	 		 $.ajax({
+	               type: "GET",
+	               url: url1,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="4"){
+	               		 	alert("取消失败，请重试！");
+	               		 	
+	               		 }else if(message=="1"){
+	               		   alert("取消成功！");
+	               		   
+	               		 }else if(message=="2"){
+	               		 	alert("该用户不为签收人，或者该用户部门不存在！");
+	               		 	
+	               		 } else if(message=="3"){
+	               		 	alert("该用户还有事项未办理完，不能取消！");
+	               		 	
+	               		 }
+	               		  window.location.reload();
+	               	   }
+	      	});
+	     }
+	}
+	
+	//禁用账号
+	function disp_confirm(userid)
+	  {
+	  var url ="${base}/user/deleteInfo?userId="+userid;
+	  var r=confirm("确认要禁用吗？");
+	  if (r==true)
+	    {
+	    	$.ajax({
+               type: "GET",
+               url: url,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.dmessage;
+               		 if(message=="0"){
+               		 	alert("禁用失败，请重试！");
+               		 }else{
+               		   alert("禁用成功！");
+               		 }
+               		 window.location.reload();
+               		 //window.location.href= "${base}/applyManage";
+               }
+		    });
+	    }
+	  }
+	  //设定筛选默认值
+	function show(dataSrc, roleType, departId, phoneNum, userName, bussName, userAccount,departIdByCity){
+	   //$("#roleType").val("11");
+	 	document.getElementById("departIdByCity").value = departIdByCity;
+	    document.getElementById("departId").value = departId;
+	    document.getElementById("dataSource").value = dataSrc;
+	    //alert(dataSrc + "; " + roleType + "; " + departId + "; " + phoneNum + "; " + userAccount);
+	    if(dataSrc == "1") {
+			//alert("选择审批接口" + dataSrc);
+			document.getElementById("idAccount").value = userAccount;
+			$("#roleType").find("option").eq(0).removeAttr("selected");
+		    $("#roleType").find("option").eq(1).css("display","block");
+			$("#roleType").find("option").eq(1).attr("selected","selected");
+		    $("#roleType").find("option").eq(1).siblings().css("display","none");
+		    $("#roleType").find("option").eq(5).css("display","block");
+			$("#roleType").find("option").eq(5).attr("selected","selected");
+		    $("#roleType").find("option").eq(5).siblings().css("display","none");
+			$("#dept").show();
+			$("#phone").hide();
+			$("#role").hide();
+			$("#business").hide();
+			$("#account").show();
+			$("#name").hide();
+		}else if(dataSrc == "2") {
+			//alert("选择本地库" + dataSrc);
+	    	document.getElementById("idName").value = userName;
+	    	document.getElementById("idBusiness").value = bussName;
+			document.getElementById("idPhone").value = phoneNum;
+	    	
+			$("#roleType").find("option").eq(0).attr("selected","selected");
+     		$("#roleType").find("option").eq(2).siblings().css("display","block");
+     		$("#roleType").find("option").eq(3).siblings().css("display","block");
+     		$("#roleType").find("option").eq(4).siblings().css("display","block");
+     		$("#roleType").find("option").eq(1).css("display","none");
+     		$("#roleType").find("option").eq(5).css("display","none");
+			$("#dept").hide();
+			$("#deptByCity").hide();//市级部门
+			$("#phone").show();
+			$("#role").show();
+				if(roleType == "" || roleType == 3) {
+					$("#business").show();
+					$("#deptByCity").hide();//市级部门
+				}else if(roleType == 2) {
+					$("#business").hide();
+					$("#deptByCity").hide();//市级部门
+				}else if(roleType == 4) {
+					$("#business").hide();
+					//选择市级部门
+					$("#deptByCity").show();//市级部门
+				}
+			$("#account").hide();
+			$("#name").show();
+		}
+		document.getElementById("roleType").value = roleType;
+	 }
+	 
+	 //设置vip权限模态框
+	 $('#exampleModal2').on('show.bs.modal', function (event) {
+	  var button = $(event.relatedTarget);
+	  var userName = button.data('whatever');//用户名称
+	  var userId = button.data('backdrop'); //用户id
+	  var userAuth = button.data('backdrop2'); //用户权限
+	  var modal = $(this);
+	  modal.find('.modal-title').text('设置VIP权限： ' + userName);
+	  //点击设置为VIP服务专员管理员（区级政务办领导）
+	  document.getElementById("serManage").onclick=function(){
+	    var zwbUrl = "${base}/user/setVIP?userId="+userId+"&isManage=1";//是否是管理员（1是，0否）
+	  	$.ajax({
+               type: "GET",
+               url: zwbUrl,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.message;
+               		 if(message=="0"){
+               		 	alert("设置失败，请重试！");
+               		 }else{
+               		   alert("设置成功！");
+               		 }
+               		 window.location.reload();
+               }
+		    });
+	  };
+	  //点击设置为VIP服务专员（区级政务办人员）
+	  document.getElementById("serAdmin").onclick=function(){
+	   var zwbUrl = "${base}/user/setVIP?userId="+userId+"&isManage=0";//是否是管理员（1是，0否）
+	   $.ajax({
+               type: "GET",
+               url: zwbUrl,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.message;
+               		 if(message=="0"){
+               		 	alert("设置失败，请重试！");
+               		 }else{
+               		   alert("设置成功！");
+               		 }
+               		 window.location.reload();
+               }
+		    });
+	  };
+	  //点击取消Vip权限
+	  document.getElementById("setNoVip").onclick=function(){
+		  if(userAuth == 4){
+		  	alert("该用户已设有VIP权限!");
+		  }else{
+		   var zwbUrl = "${base}/user/setVIP?userId="+userId+"&isManage=2";//是否是管理员（1是，0否,2取消管理员）
+		   $.ajax({
+	               type: "GET",
+	               url: zwbUrl,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="0"){
+	               		 	alert("设置失败，请重试！");
+	               		 }else{
+	               		   alert("设置成功！");
+	               		 }
+	               		 window.location.reload();
+	               }
+			    });
+			}
+		};
+	});
+  	</script>
+  </body>
+</html>

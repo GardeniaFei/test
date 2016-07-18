@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>添加部门</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden;
+	}
+	.margin{
+		margin-top:20px;
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=0/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/departManage">部门管理</a></li>
+				<li class="title"><span>添加市级部门</span></li>
+			</ul>
+		</section>
+
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>添加市级单位</h2>
+				</div>
+			</div>
+		
+			<form class="form-horizontal margin" id="addDepartForm">
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">部门名称：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" value="" name="departName"
+							id="idDepartName" placeholder="请输入部门名称">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办公电话：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" value=""
+							name="workTel" id="idWorkTel" placeholder="请填入办公电话">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办公地址：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" value="" name="workAddress"
+							id="idWorkAddress" placeholder="请输入办公地址">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a class="btn btn-success" id="idReset" role="button">重置</a>
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="addbtn" onclick="validate();"
+							value="添加" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" id="back">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+		    var a = 0;
+			$("#userAccount").on("blur", function(){
+				var code = $(this).val();
+				checkRepeatCode(code);
+			});
+	
+		$("#roleType").on("change",function(){
+			var roleType = document.getElementById("roleType");
+			var bussDiv = document.getElementById("buss_div_id");
+			if (roleType != null) {
+				if (roleType.value == "2") {
+					bussDiv.style.display = "none";
+				} else if (roleType.value == "3") {
+					bussDiv.style.display = "block";
+				}
+			}
+			//	2 - 领导、 3 - 企业
+		});
+		function selChangeListener() {
+			var roleType = document.getElementById("roleType");
+			var bussDiv = document.getElementById("buss_div_id");
+			if (roleType != null) {
+				if (roleType.value == "2") {
+					bussDiv.style.display = "none";
+				} else if (roleType.value == "3") {
+					bussDiv.style.display = "block";
+				}
+			}
+			//	2 - 领导、 3 - 企业
+		}
+		
+		$("#idReset").on("click",function(){
+			document.getElementById("idDepartName").value = "";
+			document.getElementById("idWorkTel").value = "";
+			document.getElementById("idWorkAddress").value = "";
+		});
+
+		function reAdd() {
+			document.getElementById("addUserForm").submit();
+		}
+		
+		$("#back").on("click", function(){
+		  var url ="${base}/";
+		  var r=confirm("确定取消添加用户吗？");
+		  if (r==true)
+		    {
+		    	location.href=url;
+		    }
+	    });
+	    
+		function isBlank(str) {
+			if ($.trim(str) == "") {
+				return false;
+			}
+			return true;
+		}
+	    
+	    $("#addbtn").on("click", function(){
+			var departName = document.getElementById("idDepartName").value;
+			var workTel = document.getElementById("idWorkTel").value;
+			var workAddress = document.getElementById("idWorkAddress").value;
+		    
+		    //	2 - 领导、 3 - 企业
+		    if(!isBlank(departName)) {
+		    	alert("必须填入部门名称！");
+		    }else {
+		    	var url = "${base}/addDepart?departName=" + departName;
+		    	if(isBlank(workTel)) {
+		    		if(checkPhone(workTel)) {
+		    			url += "&workTel=" + workTel;
+		    		}else {
+		    			alert("联系电话格式错误！");
+		    			return;
+		    		}
+		    	}
+		    	if(isBlank(workAddress)) {
+		    		url += "&workAddress=" + workAddress;
+		    	}
+		    	
+		    	$.ajax({
+	               type: "POST",
+	               url: url,
+	               dataType: "json",
+				   error:function() {
+						alert("访问出错");
+				   },
+	               success: function(data){
+		                  if(data.success){
+		                  	window.location.href = "${base}/departManage";
+		                  }else{
+		                    alert(data.message);
+		                  }
+	                  }
+			    });
+		    }
+		});
+		
+		//检查用户账号是否重复
+		function checkRepeatCode(str){
+			var url= "${base}/user/checkRepeatCode?userCode="+str;
+			$.ajax({
+               type: "GET",
+               url: url,
+               dataType: "json",
+               success: function(data){
+	                  var message = data.message;
+	                  if(message=="1"){
+	                    //alert("账号没有重复！");
+	                    a = 1;
+	                  }else if(message=="0"){
+	                    //alert("账号重复！");
+	                    a = 0;
+	                  }
+                  },
+                error:function(str){
+                	 result = false;
+                  	 alert("服务器故障，请重试！");
+                  }
+		    });
+		}
+		//不能为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		//是否含有中文（不包含日文和韩文）1-15个汉字
+		function isChineseChar(str){   
+		   //var reg = /^\s*[\u4e00-\u9fa5]{1,}[\u4e00-\u9fa5.·]{0,15}[\u4e00-\u9fa5]{1,}\s*$/;
+		   //var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]{2,15}$/;//是否含有中文（也包含日文和韩文）
+		   var reg =/^[\u4e00-\u9fa5]{1,15}$/;//只有汉字
+		   return reg.test(str);
+		}
+		//同理，是否含有全角符号的函数
+		function isFullwidthChar(str){
+		   var reg = /[\uFF00-\uFFEF]/;
+		   return reg.test(str);
+		} 
+		//只能英文和数字字符,3-10个字符之间，可有特殊符号.@-_
+		function CheckPwd(str){
+			//var filter = /^[a-zA-Z0-9]{1,10}$/;
+			var filter = /^(\w){1,20}$/; 
+			return filter.test(str);
+		}
+		//检查手机号码
+		function checkPhone(str){
+			var reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+			return reg.test(str);
+		}
+		//检查邮箱
+	   function isEmail(value) {
+        var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        return reg.test(value);
+    };
+		});
+	</script>
+</body>
+</html>

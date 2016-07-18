@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>琶洲中心资讯查看</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden
+	}
+	#taleft{
+		  text-align:left;
+		}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=0/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/show/viewShowCenter">琶洲这个店</a></li>
+				<li><a href="${base}/show/viewCenterInfor">中心资讯管理</a></li>
+				<li class="title"><span>查看资讯</span></li>
+			</ul>
+		</section>
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>查看资讯</h2>
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal">
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-3 control-label">主题：</label>
+					<div class="col-xs-3">
+					<label class="control-label">
+					<#if infor??>
+						${infor.INFORMATION_TITLE!}
+						<input type="hidden" value="${infor.informationId!}"  id="inforId">
+					</#if>
+					</label>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-3 control-label">更新时间：</label>
+					<div class="col-xs-3">
+						<label class="control-label">
+						<#if infor??>
+							${infor.refreshTime!}
+						</label>
+					</#if>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-3 control-label">内容：</label>
+					<div class="col-xs-3">
+					<label class="control-label" id="taleft">
+					<#if infor??>
+						${infor.informationContent!}
+					</#if>
+					</label>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a href="${base!}/show/viewCenterEditInfor?inforId=${infor.informationId!}"" class="btn btn-success"
+							role="button">编辑</a>
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" href="${base!}/show/viewCenterInfor">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</body>
+</html>

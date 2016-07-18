@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>部门管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style type="text/css">
+    th,td {
+       height:40px;
+       width:150px;
+    }
+    .orderNub{
+    	 min-width:55px;
+    	 text-align:center;
+    }
+    .orderNub2{
+    	 width:150px;
+    	 text-align:center;
+    }
+    .marginTop{
+    	margin-top:10px;
+    }
+    </style>
+  <body class="main page" onload="show('${departId!}', '${departLevel!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=4/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>部门管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline"  action="${base}/filterDepart" method="post" id="filter">
+		 		  <div class="form-group">
+				    <label for="departLevel">选择级别：</label>
+			    	<select class="form-control" id="departLevel">
+					  	<option value="2">区级</option>
+					  	<option value="1">市级</option>
+					</select>
+				  </div>
+		 		  <div class="form-group">
+				    <label for="departId">选择部门：</label>
+			    	<select class="form-control" id="departId">
+					  <option value="" selected="selected">--请选择--</option>
+					  <#if dTypeList??>
+						  <#list dTypeList as type>
+						  	<option value="${type.departName!}">${type.departName!}</option>
+						  </#list>
+					  </#if>
+					</select>
+				  </div>
+				  <div class="form-group margin">
+				  	<label for="exampleInputEmail2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				    <div class="btn-group" role="group" aria-label="...">
+					    <a class="btn btn-info" type="button" onclick="filter();">
+					    	筛选
+					    </a>
+				  		<a class="btn btn-success" type="button" href="${base}/toAddDepartView">
+					               添加
+					    </a>
+				    </div>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th class="orderNub2">部门名称</th>
+						  <th class="orderNub2">更新时间</th>
+						  <th class="orderNub2">联系电话</th>
+						  <th class="orderNub2">单位首席</th>
+						  <th class="orderNub2">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  			<#if dInfoList??>
+	  					<#list dInfoList as depInfo>
+	  						<#if depInfo_index % 4 == 0>
+								<tr class="success">
+							<#elseif depInfo_index % 4 == 1>
+								<tr class="warning">
+							<#elseif depInfo_index % 4 == 2>
+								<tr class="danger">
+							<#elseif depInfo_index % 4 == 3>
+								<tr class="info">
+							</#if>
+		  					  <td style="vertical-align:middle;" class="orderNub">${depInfo_index+1+(dInfoListPage.pageNumber-1)*10!}</td>
+							  <td style="vertical-align:middle;" class="orderNub2">${depInfo.departName!}</td>
+							  
+							  <td style="vertical-align:middle;" class="orderNub2">
+								  <#if depInfo.refreshTime != "">
+								  	${depInfo.refreshTime!}
+								  <#else>
+								   	--
+								  </#if>
+							  </td>
+							  <td style="vertical-align:middle;" class="orderNub2">
+								  <#if depInfo.workTel??>
+								  	<#if depInfo.refreshTime != "">
+								  		${depInfo.workTel!}
+								  	<#else>
+									   	--
+									</#if>
+								  <#else>
+								   	--
+								  </#if>
+							  </td>
+							  <td style="vertical-align:middle;" class="orderNub2">
+							  	<#if depInfo.userInfo??>
+							  		${depInfo.userInfo.userName!}
+							  	<#else>
+							  		---
+							  	</#if>
+							  </td>
+							  <td class="action orderNub2">
+								  <#if depInfo.userInfoList??>
+							  		<a class="btn btn-info" onclick="setChief('${depInfo.departId!}', '${depInfo.departType!}', '${depInfo.workTel!}', '${depInfo.departName!}', '${depInfo.userCode!}', '${depInfo.workAddress!}')">
+										<i class="icon-edit"></i>&nbsp;&nbsp;修改单位首席
+									</a>
+									
+							  		<a class="btn btn-info marginTop" data-toggle="modal" title="Zoom" data-target="#exampleModal" 
+									  data-whatever="${depInfo.departName!}" data-backdrop="${depInfo.departId!}" data-backcall="${depInfo.workTel!}">
+										<i class="icon-edit"></i>&nbsp;&nbsp;编辑联系电话
+									</a>
+								  <#else>
+								  	<a class="btn btn-info" onclick="setChief('${depInfo.departId!}', '${depInfo.departType!}', '${depInfo.workTel!}', '${depInfo.departName!}', '${depInfo.userCode!}', '${depInfo.workAddress!}')">
+										<i class="icon-edit"></i>&nbsp;&nbsp;设置单位首席
+									</a>
+									
+								  	<a class="btn btn-info marginTop" disabled="disabled" data-toggle="tooltip" title="Zoom">
+									  	<i class="icon-edit"></i>&nbsp;&nbsp;编辑联系电话
+								  	</a>
+								  </#if>
+								  <#if depInfo.departType == 1>
+								  	  </br>
+									  <a class="btn btn-danger marginTop" data-toggle="tooltip" onclick="disp_confirm('${depInfo.departId!}')" title="Zoom">
+										<i class="icon-trash"></i>&nbsp;&nbsp;禁用市级部门
+									  </a>
+								 </#if>
+						  	  </td>
+		  					</tr>
+	  					</#list>
+	  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (dInfoListPage.getList().size()> 0) >
+  				  <@paginate currentPage=dInfoListPage.pageNumber totalPage=dInfoListPage.totalPage actionUrl="${base}/departManage?page="/>
+  			    <#else>
+  			  	  <@paginate currentPage=1 totalPage=1 actionUrl="${base}/departManage?page="/>
+			    </#if>
+  			</div>
+  		</div>
+  	</div>
+	
+  	<!-- 编辑联系电话-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">编辑部门联系电话</h4>
+	      </div>
+	       <div class="modal-body">
+	        <form class="form-inline" id="comfrom">
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">联系电话:</label>
+	            <input type="text" class="form-control" id="call" placeholder="请输入电话号码" style="width:500px">
+	          </div>
+	        </form>
+	        </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">确定</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+  	<script type="text/javascript">
+  	
+  		$("#departLevel").on("change", function() {
+  			var departLevel = document.getElementById("departLevel").value;
+  			var url = "${base}/loadDepts?departLevel=" + departLevel;
+  			$.ajax({
+               type: "GET",
+               url: url,
+               dataType: "json",
+			   error:function() {
+					alert("访问出错");
+			   },
+               success: function(data){
+           		 if(data.success) {
+           		 	//console.log(data);
+           		    var dList = '<option value="">--请选择--</option>';
+           		    var listLen = data.dListOld.length;
+           		    
+           		    for(var i = 0;i<listLen;i++){
+           		       dList += '<option value="' + data.dListOld[i].DEPART_NAME + '">' + data.dListOld[i].DEPART_NAME + '</option>';
+           		    }
+           		 	$('#departId').html(dList);
+           		 }else {
+           		 	alert("获取单位列表失败！");
+           		 }
+               }
+		    });
+  		});
+  		
+  		function setChief(departId, departType, workTel, departName, userCode, workAddress) {
+  			//alert("部门id，部门类型，联系电话" + departId);
+  			if(!isBlank(departId)) {
+  				alert("部门id为空，出现错误！");
+  				return;
+  			}
+  			
+  			if(!isBlank(departType)) {
+  				alert("未知部门来源，无法设置部门首席！");
+  				return;
+  			}
+  			
+  			var url = "${base}/toChiefSetView?departId=" + departId + 
+  				"&departType=" + departType;
+  			
+  			if(isBlank(workTel)) {
+  				url += "&workTel=" + workTel;
+  			}
+  			
+  			if(isBlank(departName)) {
+  				url += "&departName=" + departName;
+  			}
+  			
+  			if(isBlank(userCode)) {
+  				url += "&userCode=" + userCode;
+  			}
+  			
+  			if(isBlank(workAddress)) {
+  				url += "&workAddress=" + workAddress;
+  			}
+  			
+  			location.href = url;
+  		}
+	    
+		function isBlank(str) {
+			if ($.trim(str) == "") {
+				return false;
+			}
+			return true;
+		}
+  		
+  	    function filter() {
+        	var departId = document.getElementById("departId").value;
+        	var departLevel = document.getElementById("departLevel").value;
+        	var url ="${base}/filterDepart?departLevel=" + departLevel;
+        	var url2 = "${base}/departManage";
+        	//alert(departId);
+        	//if(departId == "" && departLevel == "") {
+        		//location.href = url2;
+        	//}else {
+        	if(departId != "") {
+        		url = url + "&departId=" + departId;
+        	}
+        	location.href = url;
+        	//}
+        }
+         //设定筛选默认值
+	 function show(departId, departLevel){
+	 	document.getElementById("departId").value = departId;
+	 	//alert("部门级别：" + departLevel);
+	 	if(departLevel == 1) {
+	 		document.getElementById("departLevel").value = 1;
+	 	}else {
+	 		document.getElementById("departLevel").value = 2;
+	 	}
+	 }
+	 //审核留言modal
+	 $('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget);
+		  var recipient = button.data('whatever');
+		  var dptId = button.data('backdrop');//传递的参数
+		  var modal = $(this);
+		  var oldCall = button.data('backcall');
+		  document.getElementById("call").value = oldCall;
+		  
+		  modal.find('.modal-title').text(recipient + '：编辑部门联系电话');
+		  //跳转用ajax异步加载
+		  document.getElementById("links").onclick = function(){
+		 	   var call = document.getElementById("call").value;
+		  	   var url ="${base}/setCall?departId="+dptId+"&call="+call;
+		  	   if(call.length>50){
+					alert("联系电话不能超过50个字符！");
+					return;
+				}else{
+				   $.ajax({
+		               type: "GET",
+		               url: url,
+		               dataType: "json",
+		               success: function(data){
+		               		 var message = data.message;
+		               		 if(message == "0"){
+		               		 	alert("编辑失败，请重试！");
+		               		 }else if(message == "1"){
+		               		   alert("编辑成功！");
+		               		 }else if(message == "2"){
+		               		   alert("缺少参数！");
+		               		 }else{
+		               			 alert(message+"编辑失败，请重试！");
+		               		 }
+		               		 window.location.reload();
+		               }
+				    });
+				  }
+		  };
+	});
+	//删除提示框
+		function disp_confirm(deptId)
+		  {
+		  var deUrl ="${base}/deletDepart?departId="+deptId;
+		  var r=confirm("确认要禁用吗？");
+		  if (r==true){
+		   		$.ajax({
+               type: "GET",
+               url: deUrl,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.message;
+               		 if(message=="0"){
+               		 	alert("禁用失败，请重试！");
+               		 }else{
+               		   alert("禁用成功！");
+               		 }
+               		 window.location.href= "${base}/filterDepart?departLevel=1";
+               }
+		    });
+		  }
+		}  
+  	</script>
+  </body>
+</html>

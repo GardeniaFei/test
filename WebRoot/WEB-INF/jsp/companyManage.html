@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>企业管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+    /* th,td {
+       height:40px;
+       width:150px;
+    } */
+     .orderNub{
+    	 min-width:55px;
+    	 text-align:center;
+    }
+    .margin{
+    	margin-top:20px;
+    }
+   </style>
+  <body class="main page" onload="show('${typeId!}', '${bussName!}', '${contactName!}', '${contactPhone!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=1/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>企业管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading" style="height:auto;padding-top:0px;">
+	  			<form class="form-inline">
+		 		  <!-- <div class="form-group margin">
+				    <label for="exampleInputName2">选择审批类型：</label>
+				    	<select class="form-control" id="idBussType">
+						  <option value="">--请选择--</option>
+						  <#if typeList??>
+							  <#list typeList as type>
+							  	<option value="${type.typeId!}">${type.typeName!}</option>
+							  </#list>
+						  </#if>
+						</select>
+				  </div> -->
+				  <div class="form-group margin" >
+				    <label for="exampleInputName3">&nbsp;&nbsp;&nbsp;&nbsp;企业名称：</label>
+				    <input class="form-control" type="text" id="idBussName">
+				  </div>
+				  <div class="form-group margin" >
+				    <label for="exampleInputName3">&nbsp;&nbsp;&nbsp;&nbsp;联系人：</label>
+				    <input class="form-control" type="text" id="idLinker">
+				  </div>
+				  <div class="form-group margin" >
+				    <label for="exampleInputName3">&nbsp;&nbsp;&nbsp;&nbsp;联系电话：</label>
+				    <input class="form-control" type="text" id="idPhone">
+				  </div>
+				  <div class="form-group input-group margin">
+				    <label for="exampleInputEmail2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					    <button class="btn btn-info" type="button" onclick="filter();">
+					    	筛选
+					    </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>企业名称</th>
+						  <th>注册资本（万元）</th>
+						  <th>主营类别</th>
+						  <th>联系人</th>
+						  <th>联系电话</th>
+						  <th>签收时间</th>
+						  <th>vip服务专员账号</th>
+						  <th>企业状态</th>
+						  <th>展示排序</th>
+						  <th>操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if bussList??>
+		  					<#list bussList as bussInfo>
+		  						<#if bussInfo_index % 4 == 0>
+									<tr class="success">
+								<#elseif bussInfo_index % 4 == 1>
+									<tr class="warning">
+								<#elseif bussInfo_index % 4 == 2>
+									<tr class="danger">
+								<#elseif bussInfo_index % 4 == 3>
+									<tr class="info">
+								</#if>
+			  					  <td class="orderNub">${bussInfo_index+1+(bussPage.pageNumber-1)*10!}</td>
+								  <td>${bussInfo.businessName!}</td>
+								  <td class="text-center">
+								  	<#if bussInfo.registCapital??>
+								  		${bussInfo.registCapital!}
+								  	<#else>
+								  		---
+								  	</#if>
+								  </td>
+								  <td class="text-center">${bussInfo.operateScope!}</td>
+								  <td class="text-center">${bussInfo.contactName!}</td>
+								  <td>${bussInfo.contactPhone!}</td>
+								  <td>
+								  	<#if bussInfo.signTime??>
+								  		${bussInfo.signTime!}
+								  	<#else>
+								  		---
+								  	</#if>
+								  </td>
+								  <td class="text-center">
+								  	<#if bussInfo.service_admin??>
+								  		${bussInfo.service_admin!}
+								  	</#if>
+								  </td>
+								  <td class="text-center">
+								  	<#if bussInfo.signStatus == 0>
+								  		未签收
+								  	<#elseif bussInfo.signStatus == 2>
+								  		被退回
+								  	<#elseif bussInfo.signStatus == 1>
+								  		<#if bussInfo.settleStatus == 0>
+									  		正在办理
+									  	<#elseif bussInfo.settleStatus == 1>
+									  		已落户
+									  	</#if>
+								  	</#if>
+								  </td>
+								  <td class="text-center">1
+								  </td>
+								  <td class="action" style="width:250px;">
+									  <a class="btn btn-success" data-toggle="tooltip" href="${base}/toIntroView?businessId=${bussInfo.businessId!}" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看简介
+									  </a>
+									  <a class="btn btn-success" data-toggle="tooltip" href="${base}/bItemList?businessId=${bussInfo.businessId!}" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;事项
+									  </a>
+									  <a class="btn btn-success" data-toggle="tooltip" href="${base}/show/viewBussPublic?businessId=${bussInfo.businessId!}&businessName=${bussInfo.businessName!}" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;展示
+									  </a>
+								  </td>
+			  					</tr>
+		  					</#list>
+		  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			 <#if (bussPage.getList().size()> 0) >
+	  			 		<#if bussName??>
+		  			   			<#if typeId??>
+				  			   		<@paginate currentPage=bussPage.pageNumber totalPage=bussPage.totalPage 
+				  			   		actionUrl="${base}/filterBuss?businessName=${bussName!}&bussType=${typeId!}&page="/>
+				  			   	<#else>
+				  			   		<@paginate currentPage=bussPage.pageNumber totalPage=bussPage.totalPage 
+				  			   		actionUrl="${base}/filterBuss?businessName=${bussName!}&page="/>
+			  			   		</#if>
+			  			<#else>
+			  				<#if typeId??>
+					  			<@paginate currentPage=bussPage.pageNumber totalPage=bussPage.totalPage 
+			  			   		actionUrl="${base}/filterBuss?bussType=${typeId!}&page="/>
+				  			<#else>
+				  				<@paginate currentPage=bussPage.pageNumber totalPage=bussPage.totalPage 
+				  				actionUrl="${base}/companyManage?page="/>
+				  			</#if>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/companyManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  <script type="text/javascript">
+  	function filter() {
+	   	//alert("test");
+	   	//var bussType = document.getElementById("idBussType").value;
+	   	var businessName = document.getElementById("idBussName").value;
+	   	var contactName = document.getElementById("idLinker").value;
+	   	var contactPhone = document.getElementById("idPhone").value;
+	   	var url ="${base}/filterBuss";
+	   	
+	   	if(businessName != null && businessName != "") {
+	   		url = url + "?businessName=" + businessName;
+	   	}
+	   	
+	   	if(contactName != null && contactName != "") {
+	   		if(url.indexOf("?") > 0) {
+	   			url += "&contactName=" + $.trim(contactName);
+	   		}else {
+	   			url += "?contactName=" + $.trim(contactName);
+	   		}
+	   	}
+	   	
+	   	if(contactPhone != null && contactPhone != "") {
+	   		if(url.indexOf("?") > 0) {
+	   			url += "&contactPhone=" + $.trim(contactPhone);
+	   		}else {
+	   			url += "?contactPhone=" + $.trim(contactPhone);
+	   		}
+	   	}
+	   	
+	   	//alert("URL=" + url);
+	   	
+	   	location.href = url;
+   }
+    //设定筛选默认值
+	 function show(typeId,bussName, contactName, contactPhone){
+	 	//$("#idBussType").val(typeId);
+		$("#idBussName").val(bussName);
+		$("#idLinker").val(contactName);
+		$("#idPhone").val(contactPhone);
+	 }
+  </script>
+</html>

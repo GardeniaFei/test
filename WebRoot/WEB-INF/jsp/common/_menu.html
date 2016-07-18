@@ -1,0 +1,140 @@
+<#macro _menu index>
+  		<section id="sidebar">
+  			<i class="icon-align-justify icon-large" id="toggle"></i>
+	  		<ul id="dock">
+	  		<#if index==0>
+		  		<li class="active launcher">
+			  		<i class="icon-user"></i>
+			  		<a href="${base}/user/initUsers">用户管理</a>
+			  	</li>
+			 <#else>
+			 	<li class="launcher">
+			  		<i class="icon-user"></i>
+			  		<a href="${base}/user/initUsers">用户管理</a>
+			  	</li>
+			 </#if>
+			 
+			 <#if index==1>
+			  	<li class="active launcher">
+			  		<i class="icon-dashboard"></i>
+			  		<a href="${base}/companyManage">企业管理</a>
+			  	</li>
+			 <#else>
+			    <li class="launcher">
+			  		<i class="icon-dashboard"></i>
+			  		<a href="${base}/companyManage">企业管理</a>
+			  	</li>
+			 </#if>
+			 
+			 <#if index==2>
+			  	<li class="active launcher">
+			  		<i class="icon-file-text-alt"></i>
+			  		<a href="${base}/applyManage">事项管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-file-text-alt"></i>
+			  		<a href="${base}/applyManage">事项管理</a>
+			  	</li>
+			  </#if>
+			  
+			  <#if index==3>
+			  	<li class="active launcher">
+			  		<i class="icon-flag"></i>
+			  		<a href="${base}/messageManage">留言管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-flag"></i>
+			  		<a href="${base}/messageManage">留言管理</a>
+			  	</li>
+			  	</#if>
+			  	
+			  <#if index==4>
+			  	<li class="active launcher">
+			  		<i class="icon-building"></i>
+			  		<a href="${base}/departManage">部门管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-building"></i>
+			  		<a href="${base}/departManage">部门管理</a>
+			  	</li>
+			  	</#if>
+			  	
+			  <!-- <#if index==5>
+			  	<li class="active launcher">
+			  		<i class="icon-cloud"></i>
+			  		<a href="${base}/procedure">特殊任务</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-cloud"></i>
+			  		<a href="${base}/procedure">特殊任务</a>
+			  	</li>
+			  	</#if> -->
+			  	
+			  <#if index==6>
+			  	<li class="active launcher">
+			  		<i class="icon-bug"></i>
+			  		<a href="${base}/newsManage">消息管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-bug"></i>
+			  		<a href="${base}/newsManage">消息管理</a>
+			  	</li>
+			  	</#if>
+			  	
+			  <#if index==7>
+			  	<li class="active launcher">
+			  		<i class="icon-table"></i>
+			  		<a href="${base}/taskManage">任务管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-table"></i>
+			  		<a href="${base}/taskManage">任务管理</a>
+			  	</li>
+			  	</#if>
+			  	
+			  <#if index==8>
+			  	<li class="active launcher">
+			  		<i class="icon-beer"></i>
+			  		<a href="${base}/evaluateManage">评价管理</a>
+			  	</li>
+			  <#else>
+			    <li class="launcher">
+			  		<i class="icon-beer"></i>
+			  		<a href="${base}/evaluateManage">评价管理</a>
+			  	</li>
+			  	</#if>
+			  	
+			  	<#if index==9>
+			  	 <li class="active launcher">
+			  		<i class="icon-bookmark"></i>
+			  		<a href="${base}/typeConfig">业务类型配置</a>
+			  	 </li>
+			   <#else>
+			     <li class="launcher">
+			  		<i class="icon-bookmark"></i>
+			  		<a href="${base}/typeConfig">业务类型配置</a>
+			  	 </li>
+			  	</#if>
+			  	
+			  	<#if index==10>
+			  	 <li class="active launcher">
+			  	 	<i class="icon-cloud"></i>
+			  		<a href="${base}/notice">通知公告</a>
+			  	 </li>
+			   <#else>
+			     <li class="launcher">
+			     	<i class="icon-cloud"></i>
+			  		<a href="${base}/notice">通知公告</a>
+			  	 </li>
+			  	</#if>
+			  	
+	  		</ul>
+	  		
+  		</section>
+</#macro>

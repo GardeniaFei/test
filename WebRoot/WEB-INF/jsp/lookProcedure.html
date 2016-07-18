@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>查看特殊任务</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+    
+    <#include "/WEB-INF/jsp/common/header.html">
+	  <style type="text/css">
+	   .form-horizontal .form-group{
+	   		margin-right: -900px;
+	   }
+	   .col-sm-offset-3 {
+		  margin-left: 25%;
+		}
+		.col-sm-3 {
+		  width: 28%;
+		}
+	  </style>
+  </head>
+  
+  <body class="main page">
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=5/>
+  	    
+  	    <!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li>
+		  			<a href="${base}/procedure">特殊任务</a>
+		  		</li>
+		  		<li class="title">
+		  			<span>查看特殊任务详情</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  	
+  	    <!-- 内容主体 -->
+  		<div id="content">
+		    <div class="row">
+		  	    <div class="col-md-12 col-md-offset-5">
+		      		<h2>查看特殊任务详情</h2>
+		      		<br>
+				</div>
+		    </div>
+	   
+	   		<form class="form-horizontal" action="${base}/" method="post" id="">
+		  	
+			 <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">企业名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.businessName!}
+				  	</label>
+			  	</div>
+		  	</div>
+				
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">事项名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.itemName!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">部门名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.departName!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">新建用户：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if esp.buildUser??>
+				  			${esp.buildUser.userName!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">新建日期：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.buildTime!}
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">延期天数：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.timeLimit!}（天）
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理方式：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.transactionWay!}
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">审批状态：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if esp.examineStatus == 0>
+				  			待审批
+				  		<#elseif esp.examineStatus == 1>
+				  			已批准
+				  		<#elseif esp.examineStatus == 2>
+				  			未批准
+				  		<#elseif esp.examineStatus == 4>
+				  			审批完成，事项已继续办理
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">审批人：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if esp.userInfo??>
+				  			${esp.userInfo.userName!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">审批日期：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.examinTime!}
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">联系人姓名：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.contactName!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">联系方式：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.contactPhone!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">联系地址：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.address!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">创建原因：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.reason!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">审批意见：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.opinion!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">备注：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${esp.conment!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+		    	<div class="col-sm-offset-3 col-sm-10">
+				  	<!-- <input class="btn btn-default" type="button" onclick="validate();" value="确定" /> -->
+				  	<span style="font-size:24px;color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				  	<a href="${base}/procedure" class="btn btn-primary" role="button">返回列表</a>
+			  	</div>
+		  	</div>
+	  	
+		  </form>
+	   </div>
+	  </div>
+  </body>
+</html>

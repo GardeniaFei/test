@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSS 弹出框</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/messageAlert.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   
+</head>
+<body>
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+	  Launch demo modal
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+	      </div>
+	      <div class="modal-body">
+	        ...
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="添加">
+		添加企业类型
+	</button>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="修改">
+		修改企业类型
+	</button>
+	
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">添加企业类型</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline" id="comfrom">
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">企业类型:</label>
+	            <#if businessName??>
+	            	<input type="text" class="form-control" id="recipient-name" value="${businessName!}" style="width:500px">
+	            <#else>
+	            	<input type="text" class="form-control" id="recipient-name" placeholder="请输入企业类型名称" style="width:500px">
+	            </#if>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button onclick="" type="button" class="btn btn-primary">确定</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script>
+		$('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget); 
+		  var recipient = button.data('whatever');
+		  var modal = $(this);
+		  modal.find('.modal-title').text(recipient + '企业类型');
+		});
+	</script>
+</body>
+</html>

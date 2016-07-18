@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>企业简介</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+    
+    <#include "/WEB-INF/jsp/common/header.html">
+	  <style type="text/css">
+	   .form-horizontal .form-group{
+	   		margin-right: -900px;
+	   }
+	   .tdleft{
+	   		text-align:left;
+	   }
+	  </style>
+  </head>
+  
+  <body class="main page">
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=1/>
+  	    
+  	    <!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li>
+		  			<a href="${base}/companyManage">企业管理</a>
+		  		</li>
+		  		<li class="title">
+		  			<span>企业简介</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  	
+  	    <!-- 内容主体 -->
+  		<div id="content">
+		    <div class="row">
+		  	    <div class="col-md-12 col-md-offset-5">
+		      		<h2>企业简介</h2>
+		      		<br>
+				</div>
+		    </div>
+	   
+	   		<form class="form-horizontal" action="${base}/user/addUser" method="post" id="addUserForm">
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">企业名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.businessName!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">注册资本：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.registCapital??>
+					  		${bussInfo.registCapital!} 万元
+					  	<#else>
+					  		---
+					  	</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">主营类别：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.operateScope!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">联系人：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.contactName!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">联系电话：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.contactPhone!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">审批类型：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  	<#if bussInfo.bussType??>
+				  		${bussInfo.bussType.typeName!}
+				  	<#else>
+				  		---
+				  	</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">邮箱：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.bussEmail??>
+				  			${bussInfo.bussEmail!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">公司网址：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.webAddress??>
+				  			${bussInfo.webAddress!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<!-- <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">项目名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.projectName??>
+				  			${bussInfo.projectName!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div> -->
+		  	
+		  	<!-- <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">项目简介：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label" style="text-align:left;">
+				  		<#if bussInfo.project_intro??>
+				  			${bussInfo.project_intro!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div> -->
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">企业简介：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label" style="text-align:left;">
+				  		<#if bussInfo.businessIntro??>
+				  			${bussInfo.businessIntro!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">公司地址：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.bussAddress??>
+				  			${bussInfo.bussAddress!}
+					  	<#else>
+					  		---
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<!--  <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">是否签收：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.signStatus == 0>
+				  			未签收
+				  		<#elseif bussInfo.signStatus == 1>
+				  			已签收
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">签收人：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.signUser??>
+				  			${bussInfo.signUser.userName!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">签收时间：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.signTime!}
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">是否落户：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if bussInfo.settleStatus == 0>
+				  			未落户
+				  		<#elseif bussInfo.settleStatus == 1>
+				  			已落户
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">落户时间：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		${bussInfo.settleTime!}
+				  	</label>
+			  	</div>
+		  	</div>-->
+		  	
+		  	<div class="form-group">
+		    	<div class="col-sm-offset-3 col-sm-10">
+				  	<a href="${base}/companyManage" class="btn btn-primary" role="button">返回</a>
+			  	</div>
+		  	</div>
+		  	
+		  </form>
+	   </div>
+	  </div>
+  </body>
+</html>

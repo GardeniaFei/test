@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>事项配置</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+     
+   </style>
+   </head>
+  <body class="main page">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=9/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li><a href="${base}/typeConfig">审批类型管理</a></li>
+				<li class="title"><span>事项配置：${typeName!}</span></li>
+	  		</ul>
+	  		<input type="hidden" id="typeId" value="${typeId!}"/>
+	  		<input type="hidden" id="typeName" value="${typeName!}"/>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  				<button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal" 
+					data-whatever="添加">
+						添加事项
+					</button>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th>序号</th>
+						  <th>事项名称</th>
+						  <th>所属部门</th>
+						  <th>操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				 <#if itemInfoList??>
+		  					<#list itemInfoList as items>
+		  						<#if items_index % 4 == 0>
+									<tr class="success">
+								<#elseif items_index % 4 == 1>
+									<tr class="warning">
+								<#elseif items_index % 4 == 2>
+									<tr class="danger">
+								<#elseif items_index % 4 == 3>
+									<tr class="info">
+								</#if>
+		  					  <td>${items_index+1+(iTemIdListPage.pageNumber-1)*10!}</td>
+							  <td>${items.itemName!}</td>
+							  <#if items.departName??>
+							     <td>${items.departName!}</td>
+							   <#else>
+							     <td>--</td>
+							   </#if>
+							  <td class="action">
+							    <a class="btn btn-danger" data-toggle="tooltip" onclick="disp_confirm('${items.itemId!}', '', '${items.t_id!}')" title="Zoom">
+									<i class="icon-trash"></i>&nbsp;&nbsp;删除
+								 </a>
+							  </td>
+		  				</tr>
+		  				</#list>
+		  			</#if>
+		  		 </tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (iTemIdListPage.getList().size()> 0) >
+	  				 <@paginate currentPage=iTemIdListPage.pageNumber totalPage=iTemIdListPage.totalPage actionUrl="${base}/applyConfig?typeId=${typeId!}&typeName=${typeName!}&page="/>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/applyConfig?typeId=${typeId!}&typeName=${typeName!}&page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	
+  	<!-- 弹框内容-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">添加事项</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline" id="comfrom">
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">数据来源:</label>
+	             <select class="form-control" id="dataSource" style="width:500px" onchange="filterDept();">
+					<option value="1" selected="selected">区级</option>
+					<option value="2">市级</option>
+				 </select>
+	          </div>
+	          <div class="form-group" >
+	             <label for="message-text" class="control-label">&nbsp;</label>
+	          </div>
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">选择部门:</label>
+	             <select class="form-control" id="deptId" style="width:500px" onchange="filterItems();">
+					<option value="">--请选择--</option>
+					<#if dList??>
+						<#list dList as dept>
+							  <option value="${dept.departId!}">${dept.departName!}</option>
+						</#list>
+					</#if>
+				 </select>
+	          </div>
+	          <div class="form-group" >
+	             <label for="message-text" class="control-label">&nbsp;</label>
+	          </div>
+	          <div class="form-group" >
+				    <label for="message-text" class="control-label">选择事项:</label>
+				    <select class="form-control" id="itemId" style="width:500px">
+						<option value="">--请选择--</option>
+						<#if items??>
+							<#list items as item>
+								  <option value="${item.itemId!}">${item.itemName!}</option>
+							</#list>
+						</#if>
+					</select>
+			  </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">确定</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script>
+		$('#exampleModal').on('show.bs.modal', function(event) {
+			var button = $(event.relatedTarget);
+			var recipient = button.data('whatever');
+			var modal = $(this);
+
+			modal.find('.modal-title').text(recipient + '事项');
+			//跳转用ajax异步加载
+
+			document.getElementById("links").onclick = function() {
+				var itemId = document.getElementById("itemId").value;
+				var typeId = document.getElementById("typeId").value;
+				var deptId = document.getElementById("deptId").value;
+				var dataSource = document.getElementById("dataSource").value;
+				if (!validate_required(itemId)) {
+					alert("请选择事项！");
+					return;
+				}
+				if (!validate_required(deptId)) {
+					alert("请选择部门！");
+					return;
+				}
+				change(itemId, typeId, dataSource);
+			};
+		});
+		//验证输入框不为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		//点击添加事项
+		function change(itemId, typeId, dataSource) {
+			var typeName = document.getElementById("typeName").value;
+			var changeUrl = "${base}/addApplyForBsType?itemId=" + itemId
+					+ "&typeId=" + typeId + "&dataSource=" + dataSource;
+
+			$.ajax({
+				type : "GET",
+				url : changeUrl,
+				dataType : "json",
+				success : function(data) {
+					var message = data.message;
+					//alert("后台传来"+message);
+					if (message == "1") {
+						alert("添加成功!");
+						window.location.href = "${base}/applyConfig?typeName="
+							+ typeName + "&typeId=" + typeId;
+					} else if (message == "0") {
+						alert("该事项已添加,请重新选择!");
+					}
+				}
+			});
+
+		}
+	</script>
+	<script type="text/javascript">
+		function disp_confirm(itemId, itemType,tId) {
+			var typeName = document.getElementById("typeName").value;
+			var typeId = document.getElementById("typeId").value;
+			var deUrl = "${base}/deletApplyForBsType?itemId=" + itemId
+					+ "&typeId=" + typeId + "&tId=" +tId;
+			var r = confirm("确认要删除吗？");
+			if (r == true) {
+				$.ajax({
+					type : "GET",
+					url : deUrl,
+					dataType : "json",
+					success : function(data) {
+						var message = data.dmessage;
+						if (message == "1") {
+							alert("删除成功！");
+						} else {
+							alert("删除失败，请重试！");
+						}
+						window.location.href = "${base}/applyConfig?typeName="
+								+ typeName + "&typeId=" + typeId;
+					}
+				});
+			}
+		}
+		//筛选添加部门
+		function filterDept() {
+			var dataSource = document.getElementById("dataSource").value;
+			var furl = "${base}/filterDeptForConfig?dataSource=" + dataSource;
+
+			$.ajax({
+				type : "GET",
+				url : furl,
+				dataType : "json",
+				success : function(data) {
+					var html = "<option value=''>--请选择--</option>";
+					var list = data.deptList;
+					for (var i = 0; i < list.length; i++) {
+						var cons = list[i];
+						html += "<option value='"+cons['DEPART_ID']+"'>"
+								+ cons['DEPART_NAME'] + "</option>";
+					}
+					;
+					$('#deptId').html(html);
+				}
+			});
+		}
+		//筛选添加事项
+		function filterItems() {
+			var departId = document.getElementById("deptId").value;
+			var dataSource = document.getElementById("dataSource").value;
+			var furl = "${base}/filterItemsForConfig?departId=" + departId
+					+ "&dataSource=" + dataSource;
+
+			$.ajax({
+				type : "GET",
+				url : furl,
+				dataType : "json",
+				success : function(data) {
+					var html = "<option value=''>--请选择--</option>";
+					var list = data.itemlist;
+					for (var i = 0; i < list.length; i++) {
+						var cons = list[i];
+						html += "<option value='"+cons['ITEM_ID']+"'>"
+								+ cons['ITEM_NAME'] + "</option>";
+					}
+					;
+					$('#itemId').html(html);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

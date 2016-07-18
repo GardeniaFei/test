@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>配置结果</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style>
+		.main{
+			width:320px;
+			margin-left:auto;
+			margin-right:auto;
+		}
+		.success{
+			color:blue;
+		}
+		.error{
+			color:red;
+		}
+	</style>
+  </head>
+  
+  <body>
+  	<div class="main">
+  		<#if success>
+  			<h3 class="success">配置成功</h3>
+  		<#else>
+  			<h3 class="error">配置失败</h3>
+  		</#if>
+  		<p>${message!}</p>
+  	</div>
+  </body>
+</html>

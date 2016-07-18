@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>事项管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+    <#include "/WEB-INF/jsp/common/header.html">
+   
+  </head>
+  <body class="main page">
+   <!-- 标题块 -->
+   <#include "/WEB-INF/jsp/common/_title.html">
+    
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  	<!-- 左边导航条 -->
+  	<#include "/WEB-INF/jsp/common/_menu.html">
+  	<@_menu index=2/>
+  	
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>事项管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">选择部门：</label>
+				    	<select class="form-control" id="exampleInputName1">
+						  <option>--请选择--</option>
+						  <option>2</option>
+						  <option>3</option>
+						  <option>4</option>
+						  <option>5</option>
+						</select>
+				  </div>
+				  <div class="form-group input-group">
+				    <span class="input-group-btn">
+					    <button class="btn" type="button">
+					    	筛选
+					    </button>
+				    </span>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th>序列号</th>
+						  <th>企业名称</th>
+						  <th>项目名称</th>
+						  <th>企业类型</th>
+						  <th>联系人</th>
+						  <th>联系电话</th>
+						  <th>操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<tr class="success">
+		  					  <td>1</td>
+							  <td>联想集团</td>
+							  <td>联想集团华南研发中心</td>
+							  <td>工商注册类</td>
+							  <td>张峰</td>
+							  <td>15988669900</td>
+							  <td class="action">
+								  <a class="btn btn-success" data-toggle="tooltip" href="#" title="Zoom">
+								  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看简介
+								  </a>
+							  </td>
+		  				</tr>
+		  				<tr class="warning">
+						      <td>2</td>
+							  <td>联想集团</td>
+							  <td>联想集团华南研发中心</td>
+							  <td>工商注册类</td>
+							  <td>张峰</td>
+							  <td>15988669900</td>
+							  <td class="action">
+								  <a class="btn btn-success" data-toggle="tooltip" href="#" title="Zoom">
+								  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看简介
+								  </a>
+							  </td>
+						</tr>
+						<tr class="danger">
+						      <td>3</td>
+							  <td>联想集团</td>
+							  <td>联想集团华南研发中心</td>
+							  <td>工商注册类</td>
+							  <td>张峰</td>
+							  <td>15988669900</td>
+							  <td class="action">
+								  <a class="btn btn-success" data-toggle="tooltip" href="#" title="Zoom">
+								  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看简介
+								  </a>
+							  </td>
+						</tr>
+						<tr class="info">
+						      <td>4</td>
+							  <td>联想集团</td>
+							  <td>联想集团华南研发中心</td>
+							  <td>工商注册类</td>
+							  <td>张峰</td>
+							  <td>15988669900</td>
+							  <td class="action">
+								  <a class="btn btn-success" data-toggle="tooltip" href="#" title="Zoom">
+								  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看简介
+								  </a>
+							  </td>
+						</tr>
+		  			</tbody>
+	  			</table>
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+  			</div>
+  		</div>
+  	</div>
+  </body>
+</html>

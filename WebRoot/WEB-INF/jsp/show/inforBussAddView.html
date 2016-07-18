@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>企业资讯添加</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=1/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/companyManage">企业管理</a></li>
+				<li><a href="${base}/show/viewBussInfor?bussId=${bussId!}&bussName=${bussName!}">企业资讯管理</a></li>
+				<li class="title"><span>${bussName!}添加资讯</span></li>
+			</ul>
+		</section>
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-4">
+					<h2>${bussName!}添加资讯</h2>
+					<input type="hidden" value="${bussId!}"  id="bussId">
+					<input type="hidden" value="${bussName!}"  id="bussName">
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal">
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">主题：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" name="inforTitle" id="inforTitle" ></input>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">内容：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<textarea class="form-control"  name="intro" id="intro" rows="3"></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a href="${base}/show/inforBussAddView?bussId=${bussId!}&bussName=${bussName!}" class="btn btn-success"
+							role="button">重置</a>
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="rebtn" value="保存" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" href="${base!}/show/viewBussInfor?bussId=${bussId!}&bussName=${bussName!}">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+	//保存设置
+	$("#rebtn").click(function(){
+		var intro = $("#intro").val();
+		var inforTitle = $("#inforTitle").val();
+		var bussId = $("#bussId").val();
+		var bussName =$("#bussName").val();
+		
+		if(!validate_required(inforTitle)){
+			alert("主题不能为空!");
+			return;
+		}else{
+			var len = inforTitle.length;
+			if(len > 100){
+				alert("不能超出100字！");
+				return;
+			}
+		}
+		
+		if(!validate_required(intro)){
+			alert("内容不能为空!");
+			return;
+		}
+		
+		if(!validate_required(bussId)){
+			alert("企业id未加载，请刷新页面!");
+			return;
+		}
+		
+		var urlSave="${base!}/show/addBussInfor?intro="+intro+"&inforTitle="+inforTitle+"&bussId="+bussId;
+		 $.ajax({
+             type: "POST",
+             url: urlSave,
+             dataType: "json",
+             success: function(data){
+	                  var message = data.message;
+	                  var result = data.result;
+	                  if(result){
+	                	  alert("保存成功！");
+	                  }else{
+	                    alert(message);
+	                  }
+	                  window.location.href="${base!}/show/viewBussInfor?bussId="+bussId+"&bussName="+bussName;
+                },
+              error:function(str){
+            	 alert("服务器故障，请重试！");
+           	  }
+		    });
+	});
+	
+	//检测是否为空
+	function validate_required(string) {
+		if (string == null || string == "") {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	</script>
+</body>
+</html>

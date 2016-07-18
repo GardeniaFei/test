@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>评价管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style type="text/css">
+   	 .panel-heading{
+   	 	height:54px;
+   	 }
+    .orderNub{
+    	 width:200px;
+    	 text-align:center;
+    }
+     </style>
+   </head>
+  <body class="main page" onload="show('${bussName!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=8/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>评价管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">企业名称：</label>
+				    	<input class="form-control" type="text" id="idBussName">
+				  </div>
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filterEv();">
+					    	筛选
+					    </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>企业名称</th>
+						  <th>综合评分（分）</th>
+						  <th>评价时间</th>
+						  <th style="text-align:center;">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if evList??>
+		  					<#list evList as evInfo>
+		  						<#if evInfo_index % 4 == 0>
+									<tr class="success">
+								<#elseif evInfo_index % 4 == 1>
+									<tr class="warning">
+								<#elseif evInfo_index % 4 == 2>
+									<tr class="danger">
+								<#elseif evInfo_index % 4 == 3>
+									<tr class="info">
+								</#if>
+			  					  <td class="orderNub">${evInfo_index+1+(evListPage.pageNumber-1)*10!}</td>
+								  <td>${evInfo.businessName!}</td>
+								  <td>
+								  <#if evInfo.compGrade == 0>
+								  	审核中
+								  <#else>
+									  ${evInfo.compGrade!}
+								  </#if>
+								  </td>
+								  <td>${evInfo.evaluateTime!}</td>
+								  <td class="action" style="text-align:center;">
+									  <a class="btn btn-success" data-toggle="tooltip" href="${base}/lookDepartEval?evaluateId=${evInfo.evaluateId!}&bussName=${evInfo.businessName!}" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看部门评价
+									  </a>
+								  </td>
+			  					</tr>
+			  				</#list>
+			  			</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (evListPage.getList().size()> 0) >
+	  			   		<#if bussName??>
+				  			   	<@paginate currentPage=evListPage.pageNumber totalPage=evListPage.totalPage 
+				  			   	actionUrl="${base}/filterEvInfo?bussName=${bussName!}&page="/>
+			  			<#else>
+			  					<@paginate currentPage=evListPage.pageNumber totalPage=evListPage.totalPage 
+				  				actionUrl="${base}/evaluateManage?page="/>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/evaluateManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  <script type="text/javascript">
+  	function filterEv() {
+	   	//alert("test");
+	   	var bussName = document.getElementById("idBussName").value;
+	   	var url ="${base}/filterEvInfo";
+	   	
+	   	if(bussName==null || bussName=="") {
+	   		location.href=url;
+	   	}else {
+	   		location.href = url + "?bussName=" + bussName;
+	   	}
+   }
+   //设定筛选默认值
+	 function show(bussName){
+	 	document.getElementById("idBussName").value = bussName;
+	 }
+  </script>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>时间毫秒数转化</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+	<#include "/WEB-INF/jsp/common/header.html">
+	
+  </head>
+  
+  <body>
+  <br>
+  <h2 class="text-center">转化时间工具</h2>
+  <br>
+    <form class="form-horizontal" action="${base}/change/mschange">
+	  <div class="form-group">
+	    <label for="inputEmail3" class="col-sm-2 control-label">请填入时间:</label>
+	    <div class="col-xs-5">
+	    <#if oldtime??>
+	    	<input type="text" class="form-control" id="oldtime" name="oldtime" placeholder="oldtime" value="${oldtime!}">
+	    <#else>
+	    	<input type="text" class="form-control" id="oldtime" name="oldtime" placeholder="oldtime">
+	    </#if>
+	    </div>
+	  </div>
+	  
+	  <div class="form-group">
+	    <label for="inputEmail3" class="col-sm-2 control-label">转化后的毫秒数:</label>
+	    <div class="col-xs-5">
+	    <#if newtime??>
+	      	<input type="text" class="form-control" id="newtime" name="newtime" placeholder="newtime" value="${newtime}">
+	      <#else>
+	      	<input type="text" class="form-control" id="newtime" name="newtime" placeholder="newtime" value="">
+	      </#if>
+	    </div>
+	  </div>
+	  <div class="form-group">
+	   	<div class="col-sm-offset-3 col-sm-10">
+	  		<button type="submit" class="btn btn-default">转换</button>
+	  	</div>
+	  </div>
+	  
+	</form>
+  </body>
+</html>

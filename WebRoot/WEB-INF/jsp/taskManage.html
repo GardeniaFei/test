@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>任务管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+    <style type="text/css">
+    .orderNub{
+    	 width:100px;
+    	 text-align:center;
+    }
+     </style>
+   </head>
+  <body class="main page" onload="show('${bussName!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=7/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>任务管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">企业名称：</label>
+				    	<input class="form-control" type="text" id="idBussName">
+				  </div>
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filterTask()">
+					    	筛选
+					   </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>企业名称</th>
+						  <th>创建人</th>
+						  <th>新增时间</th>
+						  <th>办结状态</th>
+						  <th>签收人</th>
+						  <th>签收状态</th>
+						  <th>签收时间</th>
+						  <th>完成时间</th>
+						  <th style="text-align:center;">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if taskList??>
+		  					<#list taskList as task>
+		  						<#if task_index % 4 == 0>
+									<tr class="success">
+								<#elseif task_index % 4 == 1>
+									<tr class="warning">
+								<#elseif task_index % 4 == 2>
+									<tr class="danger">
+								<#elseif task_index % 4 == 3>
+									<tr class="info">
+								</#if>
+			  					  <td class="orderNub">${task_index+1+(taskListPage.pageNumber-1)*10!}</td>
+								  <td>${task.businessName!}</td>
+								  <td>
+								  	<#if task.buildUser??>
+								  		${task.buildUser.userName!}
+								  	</#if>
+								  </td>
+								  <td>${task.addTime!}</td>
+								  <td>
+								  	<#if task.compStatus == 0>
+								  		未办结
+								  	<#elseif task.compStatus == 1>
+								  		已办结
+								  	</#if>
+								  </td>
+								  <td>
+								  	<#if task.signUser??>
+								  		${task.signUser.userName!}
+								  	<#else>
+								  	--
+								  	</#if>
+								  </td>
+								  <td>
+								  	<#if task.signStatus == 1>
+								  		已签收
+								  	<#elseif task.signStatus == 0>
+								  		未签收
+								  	<#elseif task.signStatus == 2>
+								  		被退回
+								  	</#if>
+								  </td>
+								  <td>
+								  	<#if task.signTime??>
+								  		${task.signTime!}
+								  	<#else>
+								  	--
+								  	</#if>
+								  </td>
+								   <td>
+								  	<#if task.compTime??>
+								  		${task.compTime!}
+								  	<#else>
+								  	--
+								  	</#if>
+								  </td>
+								  <td class="action" style="text-align:center;">
+								  	<#if task.distributedStatus == "1">
+									  <a class="btn btn-success" data-toggle="tooltip" href="${base}/taskDistri?taskId=${task.taskId!}&bussName=${task.businessName!}" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看任务分发
+									  </a>
+									 <#else>
+								  	   <a class="btn btn-success" disabled="disabled" data-toggle="tooltip" href="" title="Zoom">
+									  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;任务未分发&nbsp;&nbsp;&nbsp;
+									  </a>
+								  	</#if> 
+								  </td>
+		  						</tr>
+							</#list>
+						</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (taskListPage.getList().size()> 0) >
+	  					<#if bussName??>
+				  			   	<@paginate currentPage=taskListPage.pageNumber totalPage=taskListPage.totalPage 
+				  			   	actionUrl="${base}/filterTask?bussName=${bussName!}&page="/>
+			  			<#else>
+			  					<@paginate currentPage=taskListPage.pageNumber totalPage=taskListPage.totalPage 
+				  				actionUrl="${base}/taskManage?page="/>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/taskManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  <script type="text/javascript">
+  	function filterTask() {
+	   	//alert("test");
+	   	var bussName = document.getElementById("idBussName").value;
+	   	var url ="${base}/filterTask";
+	   	
+	   	if(bussName==null || bussName=="") {
+	   		location.href=url;
+	   	}else {
+	   		location.href = url + "?bussName=" + bussName;
+	   	}
+   }
+   //设定筛选默认值
+	 function show(bussName){
+	 	document.getElementById("idBussName").value = bussName;
+	 }
+  </script>
+</html>

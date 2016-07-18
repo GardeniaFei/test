@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>业务类型配置</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+   	.grid table td.action {
+   		width:25%;
+   	}
+   	 .orderNub{
+    	 width:70px;
+    }
+     th,td {
+       text-align:center;
+    }
+   </style>
+   
+   </head>
+  <body class="main page">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=9/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>事项配置模板管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+  				<#if (bTypeList?size>0)>
+	  			<#else>
+		  			<div class="panel-heading">
+						<button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal" 
+						data-whatever="添加" data-rurl="${base}/typeConfig">
+							添加审批类型
+						</button>
+		  			</div>
+	  			</#if>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>审批类型</th>
+						  <th>更新时间</th>
+						  <th>操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  			<#if bTypeList??>
+	  					<#list bTypeList as btypes>
+	  						<#if btypes_index % 4 == 0>
+								<tr class="success">
+							<#elseif btypes_index % 4 == 1>
+								<tr class="warning">
+							<#elseif btypes_index % 4 == 2>
+								<tr class="danger">
+							<#elseif btypes_index % 4 == 3>
+								<tr class="info">
+							</#if>
+	  					  <td class="orderNub">${btypes_index+(bTypeListPage.pageNumber-1)*10+1!}</td>
+						  <td>${btypes.typeName}</td>
+						  <td>${btypes.refreshTime}</td>
+						  <td class="action">
+							  <a class="btn btn-info" data-toggle="tooltip" href="${base}/applyConfig?typeId=${btypes.typeId}&typeName=${btypes.typeName}" title="Zoom">
+							  	<i class="icon-edit"></i>&nbsp;&nbsp;事项配置
+							  </a>
+							  <a class="btn btn-success" data-toggle="modal" title="Zoom" data-target="#exampleModal" 
+							  data-whatever="修改" data-backdrop="${btypes.typeName!}" data-oid="${btypes.typeId!}">
+								<i class="icon-wrench"></i>&nbsp;&nbsp;修改
+							 </a>
+							 <!-- <button class="btn btn-danger" data-toggle="tooltip" onclick="disp_confirm('${btypes.typeId!}')" title="Zoom">
+								<i class="icon-trash"></i>&nbsp;&nbsp;删除
+							 </button> -->
+						  </td>
+						 </tr>
+						 </#list>
+					</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (bTypeListPage.getList().size()> 0) >
+	  				 <@paginate currentPage=bTypeListPage.pageNumber totalPage=bTypeListPage.totalPage actionUrl="${base}/typeConfig?page="/>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/typeConfig?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	
+  	<!-- 弹框内容-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">添加审批类型</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline" id="comfrom">
+	          <div class="form-group">
+	            <label for="recipient-name" class="control-label">审批类型:</label>
+	            <input type="text" class="form-control" id="recipient-name" placeholder="请输入审批类型名称" style="width:500px">
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">确定</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script>
+		$('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget); 
+		  var recipient = button.data('whatever');
+		  var param = button.data('backdrop');
+		  //var url = button.data('rurl');
+		  var typeId = button.data('oid');
+		  var modal = $(this);
+		  //alert(typeId);
+		  modal.find('.modal-title').text(recipient + '审批类型');
+		  modal.find('.modal-body input').val(param);
+		  
+		  var clicflag=0;
+		  if(recipient=='添加'){
+		  	clicflag=1;
+		  }
+		  //跳转用ajax异步加载
+		  document.getElementById("links").onclick=function(){
+									  var typeName = document.getElementById("recipient-name").value;
+									  if (!validate_required(typeName)) {
+											alert("请填入审批类型名称！");
+											return;
+										}else{
+											if(!isChineseChar(typeName)){
+												alert("审批类型名称格式不对！");
+												return;
+											}
+										}
+									  change(clicflag,typeId);
+									  
+									  };
+		});
+		//是否含有中文（也包含日文和韩文）1-15个汉字
+		function isChineseChar(str){   
+		   var reg =/^[\u4e00-\u9fa5]{1,15}$/;
+		   return reg.test(str);
+		}
+		//验证输入框不为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		
+		//删除提示框
+		function disp_confirm(typeId)
+		  {
+		  var deUrl ="${base}/deletBsType?typeId="+typeId;
+		  var r=confirm("确认要删除吗？");
+		  if (r==true){
+		   //location.href=deUrl;
+		   		$.ajax({
+               type: "GET",
+               url: deUrl,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.dmessage;
+               		 if(message=="0"){
+               		 	alert("删除失败，请重试！");
+               		 }else{
+               		   alert("删除成功！");
+               		 }
+               		 window.location.href= "${base}/typeConfig";
+               }
+		    });
+		  }
+		}  
+		  //添加跳转obj1判断是添加，还是修改；obj2为企业类型id
+		  function change(obj1,obj2){
+		     var changeUrl = "${base}/";
+		     var typeName = document.getElementById("recipient-name").value;
+		     //alert("填写名字"+obj2);
+		     if(obj1==0){
+		     	changeUrl = "${base}/resetType?typeId="+obj2+"&typeName="+typeName;
+		     }else if(obj1==1){
+		     	changeUrl = "${base}/addType?typeName="+typeName;
+		     }
+		     $.ajax({
+               type: "GET",
+               url: changeUrl,
+               dataType: "json",
+               success: function(data){
+	                  var message = data.message;
+	                  //alert("后台传来"+message);
+	                  if(message=="1"){
+	                    //alert("添加成功!");
+	                  }else if(message=="0"){
+	                    alert("添加失败,请重试!");
+	                  }else if(message=="2"){
+	                  	alert("修改失败,请重试!");
+	                  }else if(message=="3"){
+	                  	//alert("修改成功!");
+	                  }else if(message=="4"){
+	                  	alert("该类型已经存在!");
+	                  }
+	                  window.location.href= "${base}/typeConfig";
+                  }
+		    });
+		   }
+	</script>
+  </body>
+</html>

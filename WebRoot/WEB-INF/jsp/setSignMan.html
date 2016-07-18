@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>设置单位首席</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+    
+    <#include "/WEB-INF/jsp/common/header.html">
+	  <style type="text/css">
+	   .form-horizontal .form-group{
+	   		margin-right: -900px;
+	   }
+	   .col-sm-offset-2 {
+		  	margin-left: 22%;
+		}
+	  </style>
+  </head>
+  
+  <body class="main page" onload="show('${setUserId!}')">
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=4/>
+  	    
+  	    <!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li>
+		  			<a href="${base}/departManage">部门管理</a>
+		  		</li>
+		  		<li class="title">
+		  			<span>设置单位首席</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  	    <!-- 内容主体 -->
+  		<div id="content">
+		    <div class="row">
+		  	    <div class="col-md-12 col-md-offset-5">
+		  	    	<#if departType == "1">
+		      			<h2>设置市级单位首席</h2>
+		      		<#else>
+		      			<h2>设置区级单位首席</h2>
+		      		</#if>
+		      		<br>
+				</div>
+		    </div>
+	   
+	   		<form class="form-horizontal" action="${base}/setSignMan" method="post" id="signManForm">
+		  	    <input type="hidden" value="${departId!}" id="departId" name="departId"/>
+		  	    <input type="hidden" value="${departName!}" id="departName" name="departName"/>
+		  	    <input type="hidden" value="${userCode!}" id="userCode" name="userCode"/>
+		  	    <input type="hidden" value="${departType!}" id="departType" name="departType"/>
+		  	    <input type="hidden" value="${workTel!}" id="workTel" name="workTel"/>
+		  	    <input type="hidden" value="${workAddress!}" id="workAddress" name="workAddress"/>
+			  	<div class="form-group">
+				  	<label for="inputEmail3" class="col-sm-2 control-label">部门名称：</label>
+				  	<div class="col-xs-3">
+					  	<label class="control-label">
+					  		${departName!}
+					  	</label>
+				  	</div>
+			  	</div>
+		  	
+			 <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-2 control-label">单位首席：</label>
+			  	<span style="font-size:24px;color:red">*</span>
+			  	<div class="col-xs-3">
+					<select class="form-control" id="userName" name="userName">
+						<#if userList??>
+						  <#list userList as users >
+						     <option value="${users.userAccount!}">${users.userName!}</option>
+						   </#list>
+						 </#if>
+					</select>
+				</div>
+		  	</div>
+			
+		  	<div class="form-group">
+		    	<div class="col-sm-offset-2 col-sm-10">
+				  	<input class="btn btn-success" type="button" onclick="validate();" value="确定" />
+				  	<span style="font-size:24px;color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				  	<a type="button" class="btn btn-primary" href="${base}/departManage">取消</a>
+			  	</div>
+		  	</div>
+		  	
+		  </form>
+	   </div>
+	  </div>
+	<script type="text/javascript">
+		function validate() {
+			//document.getElementById("signManForm").submit();
+			var userAccount = document.getElementById("userName").value;
+			var departId = document.getElementById("departId").value;
+			var departName = document.getElementById("departName").value;
+			var userCode = document.getElementById("userCode").value;
+			var departType = document.getElementById("departType").value;
+			var workTel = document.getElementById("workTel").value;
+			var workAddress = document.getElementById("workAddress").value;
+  			if(!isBlank(departId)) {
+  				alert("部门id为空，出现错误！");
+  				return;
+  			}
+  			if(!isBlank(departType)) {
+  				alert("部门类型为空，出现错误！");
+  				return;
+  			}
+  			if(!isBlank(userAccount)) {
+  				alert("单位首席账号为空，出现错误！");
+  				return;
+  			}
+			if(userAccount == userCode) {
+				alert("单位首席相同，请重新选择单位首席！");
+				return;
+			}
+			
+			var setUrl = "${base}/setChiefMan?departId=" + departId + "&departType="
+					+ departType + "&userAccount=" + userAccount + "&departName=" + departName;
+  			
+  			if(isBlank(workTel)) {
+  				setUrl += "&workTel=" + workTel;
+  			}
+  			
+  			if(isBlank(workAddress)) {
+  				setUrl += "&workAddress=" + workAddress;
+  			}
+			
+			$.ajax({
+				type : "GET",
+				url : setUrl,
+				dataType : "json",
+				error : function(data) {
+					alert("访问出错！");
+				},
+				success : function(data) {
+					if (data.success == false) {
+						alert(data.message);
+					} else {
+						window.location.href = "${base}/departManage";
+					}
+				}
+			});
+		}
+		//设定筛选默认值
+		function show(setUserId) {
+			document.getElementById("userName").value = setUserId;
+		}
+	    
+		function isBlank(str) {
+			if ($.trim(str) == "") {
+				return false;
+			}
+			return true;
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>消息管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style type="text/css">
+    .orderNub{
+    	 width:100px;
+    	 text-align:center;
+    }
+    #tddept{
+    	width:25%;
+    }
+     </style>
+   </head>
+  <body class="main page" onload="show('${bussName1!}','${time!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=6/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>消息管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">企业名称：</label>
+				    	<input class="form-control" type="text" id="idBussName" value="${bussName!}">
+				  </div>
+				  
+				  <div class="form-group">
+				    <label for="exampleInputName2">选择日期：</label>
+				    	<select class="form-control" id="filterTime">
+						  <option value="">--请选择--</option>
+						  <option value="week">本周</option>
+						  <option value="month">本月</option>
+						  <option value="yeat">本年</option>
+						</select>
+				  </div>
+				  
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filterNews();">
+					    	筛选
+					    </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>企业名称</th>
+						  <th>消息内容</th>
+						  <th>创建人</th>
+						  <th>创建时间</th>
+						  <th>事项名称</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if newsList??>
+		  					<#list newsList as news>
+		  						<#if news_index % 4 == 0>
+									<tr class="success">
+								<#elseif news_index % 4 == 1>
+									<tr class="warning">
+								<#elseif news_index % 4 == 2>
+									<tr class="danger">
+								<#elseif news_index % 4 == 3>
+									<tr class="info">
+								</#if>
+			  					  <td class="orderNub">${news_index+1+(newsListPage.pageNumber-1)*10!}</td>
+								  <td>${news.businessName!}</td>
+								  <td id="tddept">${news.newsContent!}</td>
+								  <td>
+								  	${news.userName!}
+								  </td>
+								  <td>${news.newsTime!}</td>
+								  <td id="tddept">
+								  	${news.itemName!}
+								  </td>
+			  					</tr>
+			  				</#list>
+			  			</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (newsListPage.getList().size()> 0) >
+	  			   		<#if bussName1??>
+			  			   	<#if time??>
+				  			   	<@paginate currentPage=newsListPage.pageNumber totalPage=newsListPage.totalPage 
+					  			   	actionUrl="${base}/filterNews?businessName=${bussName!}&filterTime=${time!}&page="/>
+				  			<#else>
+			  					<@paginate currentPage=newsListPage.pageNumber totalPage=newsListPage.totalPage 
+					  				actionUrl="${base}/filterNews?businessName=${bussName!}&page="/>
+			  			   	</#if>
+			  			<#else>
+		  					<#if time??>
+				  			   	<@paginate currentPage=newsListPage.pageNumber totalPage=newsListPage.totalPage 
+					  			   	actionUrl="${base}/filterNews?filterTime=${time!}&page="/>
+				  			<#else>
+			  					<@paginate currentPage=newsListPage.pageNumber totalPage=newsListPage.totalPage 
+					  				actionUrl="${base}/newsManage?&page="/>
+			  			   	</#if>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/newsManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  <script type="text/javascript">
+  	function filterNews() {
+	   	var bussName = document.getElementById("idBussName").value;
+	   	var filterTime = document.getElementById("filterTime").value;
+	   	var url ="${base}/filterNews";
+	   	if(bussName==null || bussName=="") {
+	   		if(filterTime == null || filterTime==""){
+	   			location.href=url;
+	   		}else{
+	   			location.href = url + "?filterTime=" + filterTime;
+	   		}
+	   	}else if(filterTime == null || filterTime==""){
+	   		location.href = url + "?businessName=" + bussName;
+	   	}else{
+	   		location.href = url + "?businessName=" + bussName + "&filterTime=" + filterTime;
+	   	}
+   }
+    //设定筛选默认值
+	 function show(bussName,time){
+	 	document.getElementById("idBussName").value = bussName;
+	 	document.getElementById("filterTime").value = time;
+	 }
+  </script>
+</html>

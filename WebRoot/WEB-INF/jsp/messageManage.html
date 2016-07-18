@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>留言管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+	   table{  
+		    width:100px;  
+		    table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */  
+		}
+	   .massage{
+		    width:100%;  
+		    word-break:keep-all;/* 不换行 */  
+		    white-space:nowrap;/* 不换行 */  
+		   	overflow:hidden;
+		   	text-overflow:ellipsis; 
+	   }
+	    .orderNub{
+    	 width:60px;
+    	 text-align:center;
+    }
+    .orderNub2{
+    	 width:150px;
+    	 text-align:center;
+    }
+   </style>
+   </head>
+  <body class="main page" onload="show('${businessName!}','${userName!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=3/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>留言管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">企业名称：</label>
+				    	<input class="form-control" type="text" id="businessName">
+				  </div>
+				  <div class="form-group" >
+				    <label for="exampleInputName3">&nbsp;&nbsp;&nbsp;&nbsp;发起人：</label>
+				  </div>
+				  <div class="form-group input-group">
+				    <input class="form-control" type="text" id="userName">
+				  </div>
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filter();">
+					    	筛选
+					    </button>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th class="orderNub2">企业名称</th>
+						  <th>留言内容</th>
+						  <th class="orderNub2">发起人</th>
+						  <th class="orderNub2">留言时间</th>
+						  <th class="orderNub2">是否回复</th>
+						  <th style="text-align:center;">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if mlist??>
+		  					<#list mlist as ms>
+		  						<#if ms_index % 4 == 0>
+									<tr class="success">
+								<#elseif ms_index % 4 == 1>
+									<tr class="warning">
+								<#elseif ms_index % 4 == 2>
+									<tr class="danger">
+								<#elseif ms_index % 4 == 3>
+									<tr class="info">
+								</#if>
+		  					  <td class="orderNub">${ms_index+1+(mlistPage.pageNumber-1)*10!}</td>
+							  <td class="orderNub2">${ms.businessName!}</td>
+							  <td class="massage">${ms.messageContent!}</td>
+							  <td class="orderNub2">${ms.userName!}</td>
+							  <td class="orderNub2">${ms.messageTime!}</td>
+							  <#if ms.is_reply=="1">
+							  	<td class="orderNub2">是</td>
+							  <#elseif ms.is_reply=="0">
+							  	<td class="orderNub2">否</td>
+							  </#if>
+							  <td class="action" style="text-align:center;">
+								  <!-- Button trigger modal -->
+									<button type="button" class="btn btn-info" data-toggle="modal" data-target="#${ms_index+1!}">
+									  <i class="icon-edit"></i>&nbsp;&nbsp;详细内容
+									</button>
+									
+									<!-- Modal -->
+									<div class="modal fade" id="${ms_index+1!}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+									  <div class="modal-dialog" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									        <h4 class="modal-title" id="myModalLabel">留言内容</h4>
+									      </div>
+									      <div class="modal-body" style="text-align:left;">
+									      	  ${ms.messageContent!}
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+								  <#if ms.is_reply??>
+									  <#if ms.is_reply == "1">
+										  <a class="btn btn-success" data-toggle="tooltip" href="${base}/replyMassage?messageId=${ms.messageId!}" title="Zoom">
+										  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看回复
+										  </a>
+									  <#else>
+									 	 <a class="btn btn-success" disabled="disabled" data-toggle="tooltip" href="${base}/replyMassage?messageId=${ms.messageId!}" title="Zoom">
+										  	<i class="icon-zoom-in"></i>&nbsp;&nbsp;暂无回复
+										  </a>
+									  </#if>
+								 </#if>
+								 <#if ms.examStatus??>
+									  <#if ms.examStatus == 0>
+									   	<a class="btn btn-warning" data-toggle="modal" title="Zoom" data-target="#exampleModal" 
+										  data-whatever="" data-backdrop="${ms.messageId!}">
+											<i class="icon-wrench"></i>&nbsp;&nbsp;请&nbsp;&nbsp;审 &nbsp;&nbsp;核&nbsp;&nbsp;
+										 </a>
+								 	  <#elseif ms.examStatus == 1>
+								 	   	  <a class="btn btn-warning" data-toggle="tooltip" disabled="disabled" title="Zoom">
+											  <i class="icon-wrench"></i>&nbsp;&nbsp;审核通过&nbsp;&nbsp;
+										  </a>
+								 	  <#elseif ms.examStatus == 2>
+								 	   	  <a class="btn btn-warning" disabled="disabled" data-toggle="tooltip" title="Zoom">
+											  <i class="icon-wrench"></i>&nbsp;审核未通过
+										  </a>
+								  	  </#if>
+								 </#if>
+							  </td>
+		  				</tr>
+		  				</#list>
+		  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (mlistPage.getList().size()> 0) >
+	  			   		<#if businessName??>
+		  			   			<#if userName??>
+				  			   		<@paginate currentPage=mlistPage.pageNumber totalPage=mlistPage.totalPage 
+				  			   		actionUrl="${base}/filterMessage?userName=${userName!}&businessName=${businessName!}&page="/>
+				  			   	<#else>
+				  			   		<@paginate currentPage=mlistPage.pageNumber totalPage=mlistPage.totalPage 
+				  			   		actionUrl="${base}/filterMessage?businessName=${businessName!}&page="/>
+			  			   		</#if>
+			  			<#else>
+			  				<#if userName??>
+					  			<@paginate currentPage=mlistPage.pageNumber totalPage=mlistPage.totalPage 
+			  			   		actionUrl="${base}/filterMessage?userName=${userName!}&page="/>
+				  			<#else>
+				  				<@paginate currentPage=mlistPage.pageNumber totalPage=mlistPage.totalPage 
+				  				actionUrl="${base}/messageManage?page="/>
+				  			</#if>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/messageManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	
+  	<!-- 弹框内容-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">确认该留言审核通过吗？</h4>
+	      </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">通过</a>
+	        <a id="nolinks" type="button" class="btn btn-primary">不通过</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+  	 <script type="text/javascript">
+  	function filter() {
+	   	//alert("test");
+	   	var userName = document.getElementById("userName").value;
+	   	var businessName = document.getElementById("businessName").value;
+	   	var url ="${base}/filterMessage";
+	   	
+	   	if((userName==null || userName=="") && (businessName==null || businessName=="")) {
+	   		location.href=url;
+	   	}else if(userName != null && userName != "" && businessName != null && businessName != "") {
+	   		location.href = url + "?userName=" + userName + "&businessName=" + businessName;
+	   	}else if(userName != "") {
+	   		location.href = url + "?userName=" + userName;
+	   	}else {
+	   		location.href = url + "?businessName=" + businessName;
+	   	}
+   }
+   //设定筛选默认值
+	 function show(businessName,userName){
+	 	document.getElementById("businessName").value = businessName;
+	    document.getElementById("userName").value = userName;
+	 }
+	 
+	 //审核留言modal
+  		$('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget);
+		  var recipient = button.data('whatever');
+		  var msgId = button.data('backdrop');//传递的参数
+		  var modal = $(this);
+		  
+		  modal.find('.modal-title').text(recipient + '确认审核通过吗？');
+		  //跳转用ajax异步加载
+		  document.getElementById("links").onclick=function(){
+		  	   var url ="${base}/examMessage?message_id=" + msgId +"&exam_status=1";
+			   $.ajax({
+	               type: "GET",
+	               url: url,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="0"){
+	               		 	alert("审核失败，请重试！");
+	               		 }else if(message == "1"){
+	               		   alert("审核成功！");
+	               		 }else if(message == "2"){
+	               		   alert("缺少参数！");
+	               		 }
+	               		 window.location.reload();
+	               }
+			    });
+		  };
+		  document.getElementById("nolinks").onclick=function(){
+		  	  var url ="${base}/examMessage?message_id=" + msgId +"&exam_status=2";
+			  $.ajax({
+	               type: "GET",
+	               url: url,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="0"){
+	               		 	alert("审核失败，请重试！");
+	               		 }else if(message == "1"){
+	               		   alert("审核成功！");
+	               		 }else if(message == "2"){
+	               		   alert("缺少参数！");
+	               		 }
+	               		 window.location.reload();
+	               }
+			    });
+		  };
+		});
+   </script>
+  </body>
+</html>

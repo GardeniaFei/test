@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>琶洲中心展示信息</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=0/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/">首页</a></li>
+				<li class="title"><span>琶洲这个店展示信息</span></li>
+			</ul>
+		</section>
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>"琶洲这个店"展示信息</h2>
+					<#if center??>
+						<input type="hidden" value="${center.centerIntro!}" id="introOld">
+						<input type="hidden" value="${center.slogan!}" id="sloganOld">
+						<input type="hidden" value="${center.mapCode!}" id="mapCodeOld">
+					<#else>
+						<input type="hidden" value=""  id="introOld">
+						<input type="hidden" value=""  id="sloganOld">
+						<input type="hidden" value=""  id="mapCodeOld">
+					</#if>
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal" id="centerForm" action="${base}/show/addShow" method="post" >
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">标语：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<textarea class="form-control" name="slogan" id="slogan" rows="3"></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">简介：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<textarea class="form-control"  name="intro" id="intro" rows="3"></textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">地图上传：</label>
+					<div class="col-xs-3">
+							<input  type="file"  id="map" name="map">
+					        <p class="help-block"><span style="font-size:0.5em;color:red">（*图片大小请不要超过2M，支持png,jpg文件）</span></p>
+					        <button type="button" onclick="ajaxFileUpload()" class="btn btn-info" id="upload">上传图片</button>
+					        <p><img id="img1" alt="上传的图片显示位置" src=""  style="max-width:400px;max-length:400px;"/></p>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a href="${base}/show/viewShowCenter" class="btn btn-success"
+							role="button">重置</a>
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="rebtn" value="保存" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="rebtn" value="编辑"  onclick="edit(0)"/>
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" href="${base!}/show/viewCenterInfor">查看中心资讯</a>
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" href="${base!}/">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<script src="${base}/resources/js/ajaxfileupload.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var mapCode="";
+	$(function(){
+		edit(1);
+		mapCode=$("#mapCodeOld").val();
+		var introOld = $("#introOld").val();
+		var sloganOld = $("#sloganOld").val();
+		$("#intro").val(introOld);
+		$("#slogan").val(sloganOld);
+		 $("#img1").attr("src", "${base}/img/iconMap?imgName="+mapCode);
+	});
+	
+	//设置编辑权限
+	function edit(type){
+		if(type==1){
+			$("#intro").attr("disabled","none");
+			$("#slogan").attr("disabled","none");
+			$("#map").attr("disabled","none");
+			$("#upload").attr("disabled","none");
+			$("#rebtn").attr("disabled","none");
+		}else{
+			$("#slogan").removeAttr("disabled");
+			$("#intro").removeAttr("disabled");
+			$("#map").removeAttr("disabled");
+			$("#upload").removeAttr("disabled");
+			$("#rebtn").removeAttr("disabled");
+		}
+	}
+	//保存设置
+	$("#rebtn").click(function(){
+		var intro = $("#intro").val();
+		var slogan = $("#slogan").val();
+		
+		if(!validate_required(mapCode)){
+			alert("图片失效，请重新上传图片!");
+			return;
+		}
+		
+		if(!validate_required(intro)){
+			alert("简介不能为空!");
+			return;
+		}
+		
+		if(!validate_required(slogan)){
+			alert("标语不能为空!");
+			return;
+		}
+		
+		var urlSave="${base!}/show/addShowCenter?intro="+intro+"&slogan="+slogan+"&mapCode="+mapCode;
+		 $.ajax({
+             type: "POST",
+             url: urlSave,
+             dataType: "json",
+             success: function(data){
+	                  var message = data.message;
+	                  var result = data.result;
+	                  if(result){
+	                	  alert("保存成功！");
+	                  }else{
+	                    alert(message);
+	                  }
+	                  edit(1);
+                },
+              error:function(str){
+            	 alert("服务器故障，请重试！");
+           	  }
+		    });
+	});
+	
+	//上传图片
+	function ajaxFileUpload() {
+		if(!checkImageExt("map")){
+			return;
+		}
+		
+		var map = $("#map").val();
+		if(!validate_required(map)){
+			alert("请选择要上传的图片!");
+			return;
+		}
+            $.ajaxFileUpload
+            (
+                {
+                    url: '${base}/img/uploadMap', //用于文件上传的服务器端请求地址
+                    type: 'post',
+                    data: {mapType: '1'}, //此参数非常严谨，写错一个引号都不行
+                    secureuri: false, //一般设置为false
+                    fileElementId: 'map', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+                    dataType: 'json', //返回值类型 一般设置为json
+                    success: function (data, status)  //服务器成功响应处理函数
+                    {
+                    	mapCode = data.imgName;
+                        $("#img1").attr("src", "${base}/img/iconMap?imgName="+data.imgName);
+                        if (typeof (data.error) != 'undefined') {
+                            if (data.error != '') {
+                                alert("上传失败!");
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    },
+                    error: function (data, status, e)//服务器响应失败处理函数
+                    {
+                        alert(e);
+                    }
+                }
+            );
+        }
+	//检测文件格式
+	function checkImageExt(eleId) {
+			var _file = document.getElementById(eleId);
+			var i = _file.value.lastIndexOf('.');
+			var len = _file.value.length;
+			var extEndName = _file.value.substring(i + 1, len);
+			var extName = "GIF,BMP,JPG,JPEG,PNG";//首先对格式进行验证
+			if (extName.indexOf(extEndName.toUpperCase()) == -1) {
+				alert("*您只能输入" + extName + "格式的文件");
+				return false;
+			} else {
+				return true;
+			}
+	}
+	//检测是否为空
+	function validate_required(string) {
+		if (string == null || string == "") {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	</script>
+</body>
+</html>

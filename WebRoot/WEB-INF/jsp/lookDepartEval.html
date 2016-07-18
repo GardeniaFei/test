@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>部门评价</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+   	 .panel-heading{
+   	 	height:54px;
+   	 }
+   	  .orderNub{
+    	 width:70px;
+    	 text-align:center;
+    }
+    .mLeft{
+    	margin-left:15px;
+    }
+   </style>
+   </head>
+  <body class="main page" onload="show('${examStatus!}');">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=8/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li><a href="${base}/evaluateManage">评价管理</a></li>
+				<li class="title">部门评价<#if bussName??>： <span>${bussName!}</#if></span></li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+				<div class="panel-heading">
+					<form class="form-inline">
+						<input type="hidden" id="idBsName" value="${bussName!}"/>
+						<input type="hidden" id="idEvaId" value="${evaluateId!}"/>
+						<div class="form-group">
+							<label for="exampleInputName2">审核状态：</label> 
+							<select
+								class="form-control" id="idExamStatus">
+								<option value="2">--请选择--</option>
+								<option value="-1">--未审--</option>
+								<option value="1">--已审--</option>
+								<option value="0">--原始数据--</option>
+							</select>
+						</div>
+						<div class="form-group mLeft">
+							<button class="btn btn-info" type="button" onclick="filterEv();">
+								筛选</button>
+						</div>
+					</form>
+				</div>
+				<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>部门名称</th>
+						  <th>评分（分）</th>
+						  <th>评价时间</th>
+						  <th>评价内容</th>
+						  <th>审核状态</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if deptEvs??>
+		  					<#list deptEvs as evInfo>
+		  						<#if evInfo_index % 4 == 0>
+									<tr class="success">
+								<#elseif evInfo_index % 4 == 1>
+									<tr class="warning">
+								<#elseif evInfo_index % 4 == 2>
+									<tr class="danger">
+								<#elseif evInfo_index % 4 == 3>
+									<tr class="info">
+								</#if>
+			  					  <td class="orderNub">${evInfo_index+1+(deptEvsPage.pageNumber-1)*10!}</td>
+								  <td>${evInfo.departName!}</td>
+								  <td>${evInfo.grade!}</td>
+								  <td>${evInfo.time!}</td>
+								  <td>${evInfo.content!}</td>
+								  <#if examStatus == "-1">
+							  		<td class="action">
+								  		<a class="btn btn-success" data-toggle="tooltip" 
+								  			href="${base}/examEvaView?paramId=${evInfo.paramId!}&bussName=${bussName!}" title="Zoom">
+									  		<i class="icon-zoom-in"></i>&nbsp;&nbsp;审核
+									  	</a>
+								  	</td>
+								  <#elseif examStatus == "1">
+								  	<td>已审</td>
+								  <#elseif examStatus == "2">
+								  	  <#if evInfo.examStatus == 0>
+									  	<td class="action">
+									  		<a class="btn btn-success" data-toggle="tooltip" 
+									  			href="${base}/examEvaView?paramId=${evInfo.paramId!}&bussName=${bussName!}" title="Zoom">
+										  		<i class="icon-zoom-in"></i>&nbsp;&nbsp;审核
+										  	</a>
+									  	</td>
+									  <#else>
+									  	<td>已审</td>
+									  </#if>
+								  <#else>
+								  	  <#if evInfo.examStatus == 0>
+									  	<td>未审</td>
+									  <#else>
+									  	<td>已审</td>
+									  </#if>
+								  </#if>
+			  					</tr>
+			  				</#list>
+			  			</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			<#if (deptEvsPage.getList().size()> 0) >
+	  				 <@paginate currentPage=deptEvsPage.pageNumber totalPage=deptEvsPage.totalPage actionUrl="${base}/lookDepartEval?page="/>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/lookDepartEval?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+<script type="text/javascript">
+	function filterEv() {
+		var examStatus = document.getElementById("idExamStatus").value;
+		var bussName = document.getElementById("idBsName").value;
+		var evaluateId = document.getElementById("idEvaId").value;
+		var url = "${base}/filterDeptEv?evaluateId=" + evaluateId + "&bussName=" + bussName + 
+			"&examStatus=" + examStatus;
+		
+		//alert(examStatus + "; " + bussName + "; " + evaluateId);
+		location.href = url;
+	}
+	
+	function show(examStatus) {
+		document.getElementById("idExamStatus").value = examStatus;
+	}
+</script>
+</html>

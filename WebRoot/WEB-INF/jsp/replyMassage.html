@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>留言回复</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+     .panel-heading{
+			height:10px;
+		}
+	  table{  
+		    width:100px;  
+		    table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */  
+		}
+	   .massage{
+		    width:100%;  
+		    word-break:keep-all;/* 不换行 */  
+		    white-space:nowrap;/* 不换行 */  
+		   	overflow:hidden;
+		   	text-overflow:ellipsis; 
+	   }
+	   .orderNub{
+    	 width:100px;
+    	 text-align:center;
+      }
+    .orderNub2{
+    	 width:250px;
+     	 text-align:center;
+    }
+   </style>
+   </head>
+  <body class="main page">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=3/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li><a href="${base}/messageManage">留言管理</a></li>
+				<li class="title"><span>留言回复</span></li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序列号</th>
+						  <th>回复内容</th>
+						  <th class="orderNub2">回复人</th>
+						  <th class="orderNub2">回复时间</th>
+						  <th style="text-align:center;">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if replylist??>
+		  					<#list replylist as rs>
+		  						<#if rs_index % 4 == 0>
+									<tr class="success">
+								<#elseif rs_index % 4 == 1>
+									<tr class="warning">
+								<#elseif rs_index % 4 == 2>
+									<tr class="danger">
+								<#elseif rs_index % 4 == 3>
+									<tr class="info">
+								</#if>
+		  					  <td class="orderNub">${rs_index+1+(replylistPage.pageNumber-1)*10}</td>
+							  <td class="massage">${rs.messageContent!}</td>
+							  <#if rs.userInfo??>
+							  	<td class="orderNub2">${rs.userInfo.userName!}</td>
+							  <#else>
+							    <td class="orderNub2"><td>
+							  </#if>
+							  <td class="orderNub2">${rs.messageTime!}</td>
+							   <td class="action" style="text-align:center;">
+								  <!-- Button trigger modal -->
+									<button type="button" class="btn btn-info" data-toggle="modal" data-target="#${rs_index+1!}">
+									  <i class="icon-edit"></i>&nbsp;&nbsp;回复详情
+									</button>
+									
+									<!-- Modal -->
+									<div class="modal fade" id="${rs_index+1!}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+									  <div class="modal-dialog" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									        <h4 class="modal-title" id="myModalLabel">回复内容</h4>
+									      </div>
+									      <div class="modal-body" style="text-align:left;">
+									      	  ${rs.messageContent!}
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+									<#if rs.examStatus??>
+									  <#if rs.examStatus == 0>
+									   	<a class="btn btn-warning" data-toggle="modal" title="Zoom" data-target="#exampleModal" 
+										  data-whatever="" data-backdrop="${rs.messageId!}">
+											<i class="icon-wrench"></i>&nbsp;&nbsp;请&nbsp;&nbsp;审 &nbsp;&nbsp;核&nbsp;&nbsp;
+										 </a>
+								 	  <#elseif rs.examStatus == 1>
+								 	   	  <a class="btn btn-warning" data-toggle="tooltip" disabled="disabled" title="Zoom">
+											  <i class="icon-wrench"></i>&nbsp;&nbsp;审核通过&nbsp;&nbsp;
+										  </a>
+								 	  <#elseif rs.examStatus == 2>
+								 	   	  <a class="btn btn-warning" disabled="disabled" data-toggle="tooltip" title="Zoom">
+											  <i class="icon-wrench"></i>&nbsp;审核未通过
+										  </a>
+								  	  </#if>
+								 </#if>
+							  </td>
+		  				   </tr>
+		  				</#list>
+		  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (replylistPage.getList().size()> 0) >
+	  				 <@paginate currentPage=replylistPage.pageNumber totalPage=replylistPage.totalPage actionUrl="${base}/replyMassage?page="/>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/replyMassage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	<!-- 弹框内容-->
+  	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="exampleModalLabel">确认该留言审核通过吗？</h4>
+	      </div>
+	      <div class="modal-footer">
+	        <a id="links" type="button" class="btn btn-primary">通过</a>
+	        <a id="nolinks" type="button" class="btn btn-primary">不通过</a>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<script type="text/javascript">
+	//审核留言modal
+  		$('#exampleModal').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget);
+		  var recipient = button.data('whatever');
+		  var msgId = button.data('backdrop');//传递的参数
+		  var modal = $(this);
+		  
+		  modal.find('.modal-title').text(recipient + '确认审核通过吗？');
+		  //跳转用ajax异步加载
+		  document.getElementById("links").onclick=function(){
+		  	   var url ="${base}/examMessage?message_id=" + msgId +"&exam_status=1";
+			   $.ajax({
+	               type: "GET",
+	               url: url,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="0"){
+	               		 	alert("审核失败，请重试！");
+	               		 }else if(message == "1"){
+	               		   alert("审核成功！");
+	               		 }else if(message == "2"){
+	               		   alert("缺少参数！");
+	               		 }
+	               		 window.location.reload();
+	               }
+			    });
+		  };
+		  document.getElementById("nolinks").onclick=function(){
+		  	  var url ="${base}/examMessage?message_id=" + msgId +"&exam_status=2";
+			  $.ajax({
+	               type: "GET",
+	               url: url,
+	               dataType: "json",
+	               success: function(data){
+	               		 var message = data.message;
+	               		 if(message=="0"){
+	               		 	alert("审核失败，请重试！");
+	               		 }else if(message == "1"){
+	               		   alert("审核成功！");
+	               		 }else if(message == "2"){
+	               		   alert("缺少参数！");
+	               		 }
+	               		 window.location.reload();
+	               }
+			    });
+		  };
+		});
+	</script>
+  </body>
+</html>

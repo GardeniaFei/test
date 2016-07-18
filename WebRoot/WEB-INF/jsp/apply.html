@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>事项管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+    <#include "/WEB-INF/jsp/common/header.html">
+    <style type="text/css">
+    th,td {
+       height:40px;
+       width:150px;
+    }
+    .orderNub{
+    	 width:37px;
+    	 text-align:center;
+    }
+    </style>
+  </head>
+  <body class="main page" onload="show('${dataSrc!}', '${departId!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=2/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>事项管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">数据来源：</label>
+				    	<select class="form-control" id="dataSource" onchange="filterDept();">
+						  <option value="1" selected="selected">审批接口</option>
+						  <option value="2">本地库</option>
+						</select>
+				  </div>
+		 		  <div class="form-group">
+				    <label for="exampleInputName2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择部门：</label>
+				    	<select class="form-control" id="deptId">
+						  <option value="">--请选择--</option>
+						  <#if deptList??>
+						  	<#list deptList as dept>
+						  		<option value="${dept.departId!}">${dept.departName!}</option>
+						  	</#list>
+						  </#if>
+						</select>
+				  </div>
+				  <div class="form-group input-group">
+					  <button class="btn btn-info" type="button" onclick="filterItems();">
+					    	筛选
+					  </button>
+				  </div>
+				  <div class="form-group">
+				  	<a class="btn btn-success" type="button" href="${base}/addApplyShow">
+						               添加事项
+					</a>
+				  </div>
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>事项名称</th>
+						  <th class="orderNub">所属部门</th>
+						  <th class="orderNub">更新时间</th>
+						  <th class="orderNub">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if items??>
+		  					<#list items as item>
+		  						<#if item_index % 4 == 0>
+									<tr class="success">
+								<#elseif item_index % 4 == 1>
+									<tr class="warning">
+								<#elseif item_index % 4 == 2>
+									<tr class="danger">
+								<#elseif item_index % 4 == 3>
+									<tr class="info">
+								</#if>
+									<td class="orderNub">${item_index+1+(itemsPage.pageNumber-1)*10!}</td>
+							  		<td>${item.itemName!}</td>
+							  		<td class="orderNub">
+							  			${item.departName!}
+							  		</td>
+							  		<td class="orderNub">
+								  		<#if item.refreshTime??>
+								  			${item.refreshTime!}
+								  		<#else>
+								  			  --
+								  		</#if>
+							  		</td>
+							  		<td class="action orderNub">
+							  			<#if item.itemType == 1>
+									  		<a class="btn btn-info" data-toggle="tooltip" href="${base}/applyGuidByGov?itemId=${item.itemId!}" title="Zoom">
+									  			<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看
+									  		</a>
+								  		<#else>
+									  		<a class="btn btn-info" data-toggle="tooltip" href="${base}/checkServiceGuid?itemId=${item.itemId!}" title="Zoom">
+									  			<i class="icon-zoom-in"></i>&nbsp;&nbsp;查看
+									  		</a>
+									  		<a class="btn btn-success" data-toggle="tooltip" href="${base}/resetApplyShow?itemId=${item.itemId!}" title="Zoom">
+									  			<i class="icon-wrench"></i>&nbsp;&nbsp;修改
+									  		</a>
+									  		<a class="btn btn-danger" data-toggle="tooltip" onclick="disp_confirm('${item.itemId!}')" title="Zoom">
+									  			<i class="icon-trash"></i>&nbsp;&nbsp;删除
+									  		</a>
+								  		</#if>
+							  		</td>
+			  					</tr>
+		  					</#list>
+		  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (itemsPage.getList().size()> 0) >
+	  			   		<#if departId??>
+				  			   	<@paginate currentPage=itemsPage.pageNumber totalPage=itemsPage.totalPage 
+				  			   	actionUrl="${base}/filterItems?departId=${departId!}&dataSource=${dataSrc!}&page="/>
+			  			<#else>
+			  					<@paginate currentPage=itemsPage.pageNumber totalPage=itemsPage.totalPage 
+				  				actionUrl="${base}/applyManage?page="/>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/applyManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  </body>
+  <script type="text/javascript">
+  //筛选添加部门
+		function filterDept() {
+			var dataSource = document.getElementById("dataSource").value;
+			var furl = "${base}/filterDeptForConfig?dataSource=" + dataSource;
+
+			$.ajax({
+				type : "GET",
+				url : furl,
+				dataType : "json",
+				success : function(data) {
+					var html = "<option value=''>--请选择--</option>";
+					var list = data.deptList;
+					for (var i = 0; i < list.length; i++) {
+						var cons = list[i];
+						html += "<option value='"+cons['DEPART_ID']+"'>"
+								+ cons['DEPART_NAME'] + "</option>";
+					}
+					;
+					$('#deptId').html(html);
+				}
+			});
+		}
+  	function filterItems() {
+	   	//alert("test");
+	   	var departId = document.getElementById("deptId").value;
+	   	var dataSrc = document.getElementById("dataSource").value;
+	   	var url ="${base}/filterItems?dataSource=" + dataSrc;
+	   	
+	   	if(departId==null || departId=="") {
+	   		location.href=url;
+	   	}else {
+	   		location.href = url + "&departId=" + departId;
+	   	}
+   }
+    //设定筛选默认值
+	 function show(dataSrc, deptId){
+	 	//alert("选择的部门", + deptId);
+	 	document.getElementById("deptId").value = deptId;
+	 	document.getElementById("dataSource").value = dataSrc;
+	 }
+	 //删除事项
+	 function disp_confirm(itemId)
+		  {
+		  var deUrl ="${base}/deletApply?itemId="+itemId;
+		  var r=confirm("确认要删除吗？");
+		  if (r==true){
+		   //location.href=deUrl;
+		   		$.ajax({
+               type: "GET",
+               url: deUrl,
+               dataType: "json",
+               success: function(data){
+               		 var message = data.dmessage;
+               		 if(message=="0"){
+               		 	alert("删除失败，请重试！");
+               		 }else{
+               		   alert("删除成功！");
+               		 }
+               		 window.location.href= "${base}/applyManage";
+               }
+		    });
+		  }
+		}  
+  </script>
+</html>

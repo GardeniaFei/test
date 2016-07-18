@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Application>
+	<!-- 应用名称 -->
+	<ApplicationName>EBusiness</ApplicationName>
+	<!-- 应用描述信息 -->
+	<ApplicationDesc>用于app</ApplicationDesc>
+	<!-- 版本信息 -->
+	<Version>1.0.20160226</Version>
+	<!-- 开发者姓名 -->
+	<Author>龚斌、王吉菲妮</Author>
+	<!-- 入口URL地址 -->
+	<EntryUrl>/EBusiness</EntryUrl>
+	<ReleaseNotes>详细见版本发布的releasenotes.txt文件</ReleaseNotes>
+</Application>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>修改用户事项</title>
+	
+	<meta name="keywords" content="keyword1,keyword2,keyword3">
+	<meta name="description" content="this is my page">
+	<meta name="content-type" content="text/html; charset=UTF-8">
+	<link href="${base}/resources/stylesheets/application-a07755f5.css"
+		rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css"
+		rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css"
+		rel="stylesheet" type="text/css">
+	
+	<#include "/WEB-INF/jsp/common/header.html">
+	<style type="text/css">
+		.form-horizontal .form-group {
+			margin-right: -900px;
+		}
+		#content{
+			overflow-x:hidden;
+		}
+		#sidebar{
+			min-height:800px;
+			height:auto;
+		}
+		#wrapper{
+			min-height:800px;
+			height:auto;
+		}
+	</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=2/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/applyManage">事项管理</a></li>
+				<li class="title"><span>修改事项</span></li>
+			</ul>
+		</section>
+
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>修改事项</h2>
+					<br>
+					<#if message??>
+						<span style="font-size:24px;color:red">(提示：${message!})</span>
+					</#if>
+				</div>
+			</div>
+
+			<form class="form-horizontal" action="${base}/resetApply"
+				method="post" id="addItemForm">
+
+				<input id="itemId" name="itemId" type="hidden" value="${item.itemId!}" /> 
+				<input id="departIdOld" name="departIdOld" type="hidden" value="${item.departId!}" /> 
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">所属部门：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<select class="form-control" id="departId" name="departId">
+							<#if item??>
+							  	<option value="${item.departId!}">${item.departName!}</option>
+							</#if>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">事项名称：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" readonly="readonly"
+							value="${item.itemName!}" name="item_name" id="item_name"
+							placeholder="">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办理时限：</label>
+					<span style="font-size:15px;color:blue">（单位：工作日）</span>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.timeLimit!}" name="time_limit" id="time_limit"
+							placeholder="请输入100以内的数字">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办理对象：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.transactionObject!}" name="object" id="object"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办理条件：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.needCondition!}" name="condition" id="condition"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">所需材料：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.needMaterial!}" name="material" id="material"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">材料附件URL：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.materialAnnex!}" name="material_annex" id="material_annex"
+							placeholder="">
+					</div>
+				</div>
+
+			    <div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办理流程：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.itemFlow!}" name="item_flow" id="item_flow"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">流程附件URL：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.flowAnnex!}" name="flow_annex" id="flow_annex"
+							placeholder="">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办事窗口：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.transactionWindow!}" name="transaction_window" id="transaction_window"
+							placeholder="">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">收费标准：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.itemCharge!}" name="item_charge" id="item_charge"
+							placeholder="">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">常见问题：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.itemQuestions!}" name="item_questions" id="item_questions"
+							placeholder="">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">办理依据：</label>
+					<div class="col-xs-3">
+						<input class="form-control" type="text"
+							value="${item.gistLaw!}" name="gist_law" id="gist_law"
+							placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a class="btn btn-default" role="button" id="back">返回</a>
+				  	<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" value="确认" id="rebtn"/>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+	  var a=0;
+	  var deptOld = document.getElementById("departIdOld").value;
+	  document.getElementById("departId").value = deptOld;
+	  var deptIdToCheck = deptOld;
+	  $("#back").on("click", function(){
+		  var url ="${base}/applyManage";
+		  var r=confirm("确定取消修改事项吗？");
+		  if (r==true)
+		    {
+		    	location.href=url;
+		    }
+	   });
+	   $("#item_name").on("blur",function(){
+	    	var itemName = $(this).val();
+	    	//checkName(itemName);
+	    });
+	    
+	    $("#departId").on("change",function(){
+	    	deptIdToCheck = $(this).val();
+	    	var itemName = $("#item_name").val();
+	    	if(itemName!=""){
+	    		checkName(itemName);
+	    	}
+	    });
+	    
+	    $("#rebtn").on("click",function(){
+	    	validate();
+	    });
+	function validate() {
+		var departId = document.getElementById("departId").value;
+		var item_name = document.getElementById("item_name").value;
+		var time_limit = document.getElementById("time_limit").value;
+		var object = document.getElementById("object").value;
+		var condition = document.getElementById("condition").value;
+		var material = document.getElementById("material").value;
+		var material_annex = document.getElementById("material_annex").value;
+		var item_flow = document.getElementById("item_flow").value;
+		var flow_annex = document.getElementById("flow_annex").value;
+		var transaction_window = document.getElementById("transaction_window").value;
+		var item_charge = document.getElementById("item_charge").value;
+		var item_questions = document.getElementById("item_questions").value;
+		var gist_law = document.getElementById("gist_law").value;
+		
+		if(!validate_required(time_limit)){
+			alert("请输入办理时限！");
+			return;
+		}else{
+			if(!check(time_limit)){
+				alert("输入办理时限格式不正确！");
+				return;
+			}else if(time_limit >= 100) {
+				alert("办理时限必须在100天以内");
+				return;
+			}
+		}
+		
+		document.getElementById("addItemForm").submit();
+	}
+
+	//不以0开头的数字
+	function check(str){
+		var filter = /^[1-9]\d*$/; 
+		return filter.test(str);
+	}
+	function validate_required(string) {
+		if (string == null || string == "") {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	 function checkName(itemName){
+	 	if(deptIdToCheck!=""){
+	 		var checkUrl = "${base}/checkApplyName?itemName="+itemName+"&deptId="+deptIdToCheck;
+	   			 $.ajax({
+	               type: "GET",
+	               url: checkUrl,
+	               dataType: "json",
+	               success: function(data){
+		                  var message = data.message;
+		                  if(message=="1"){
+		                    a=0;
+		                    //alert("事项名称返回正确！");
+		                  }else if(message=="0"){
+		                    a=1;
+		                    //alert("事项名称返回错误,请重试!");
+		                  }
+	                  },
+	                error:function(str){
+                	 result = false;
+                  	 alert("服务器故障，请重试！");
+                  }
+			    });
+		   }
+	    }
+	 });
+	</script>
+ </body>
+</html>

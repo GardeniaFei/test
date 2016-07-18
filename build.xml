@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="EBusiness" default="jar" basedir=".">
+	<property name="home" value="${basedir}" />
+	<target name="jar">
+		<jar jarfile="${home}/EBusiness.war" >
+			<fileset dir="${home}/WebRoot">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+</project>

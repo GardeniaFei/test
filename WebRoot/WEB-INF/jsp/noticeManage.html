@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>通知公告管理</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+	
+   <#include "/WEB-INF/jsp/common/header.html">
+   <style>
+	   table{  
+		    width:100px;  
+		    table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */  
+		}
+	   .massage{
+		    width:100%;  
+		    word-break:keep-all;/* 不换行 */  
+		    white-space:nowrap;/* 不换行 */  
+		   	overflow:hidden;
+		   	text-overflow:ellipsis; 
+	   }
+	    .orderNub{
+    	 width:60px;
+    	 text-align:center;
+    }
+    .orderNub2{
+    	 width:400px;
+    	 text-align:center;
+    }
+   </style>
+   </head>
+  <body class="main page" onload="show('${time!}')">
+  
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=10/>
+  		
+  		<!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li class="title">
+		  			<span>通知公告管理</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  		
+  		<!-- 表格主体 -->
+  		<div id="content">
+  			<div class="panel panel-default grid">
+	  			<div class="panel-heading">
+	  			<form class="form-inline">
+				   <div class="form-group">
+				    <label for="exampleInputName2">选择日期：</label>
+				    	<select class="form-control" id="filterTime">
+						  <option value="">--请选择--</option>
+						  <option value="week">本周</option>
+						  <option value="month">本月</option>
+						  <option value="year">本年</option>
+						</select>
+				  </div>
+				  <div class="form-group" >
+				       <button class="btn btn-info" type="button" onclick="filter();">
+					    	筛选
+					    </button>
+					    <a class="btn btn-info" type="button" href="${base!}/view/noticeAddView">
+					    	添加公告
+					    </a>
+				  </div>
+				  <div class="form-group"  id="old_email">
+				  	<label for="exampleInputName2">投稿邮箱：<#if email??>${email.email_name!}</#if></label>
+				  	<button class="btn btn-info" type="button" onclick="viewEmail()" id="editView">
+					    	编辑邮箱
+					  </button>
+				  </div>
+				  <div class="form-group"  id="edit_email">
+				  		<input type="text" class="form-control"  id="notice_email"  placeholder="请输入新的Email" >
+				  		<button class="btn btn-info" type="button" onclick="editEmail()">
+					    	保存
+					  </button>
+					  <a class="btn btn-info" type="button" href="${base!}/view/noticeManage">
+					    	取消
+					  </a>
+				  </div>
+				  	
+	  			 </form>
+	  			</div>
+	  			<table class="table">
+		  			<thead>
+		  				<tr>
+		  				  <th class="orderNub">序号</th>
+						  <th>通知公告主题</th>
+						  <th>发起人</th>
+						  <th>发起部门</th>
+						  <th>发起企业</th>
+						  <th>发布对象</th>
+						  <th>发布时间</th>
+						  <th >发布状态</th>
+						  <th style="text-align:center;" class="orderNub2">操作</th>
+		  				</tr>
+		  			</thead>
+		  			<tbody>
+		  				<#if notices??>
+		  					<#list notices as ms>
+		  						<#if ms_index % 4 == 0>
+									<tr class="success">
+								<#elseif ms_index % 4 == 1>
+									<tr class="warning">
+								<#elseif ms_index % 4 == 2>
+									<tr class="danger">
+								<#elseif ms_index % 4 == 3>
+									<tr class="info">
+								</#if>
+		  					  <td class="orderNub">${ms_index+1+(noticePage.pageNumber-1)*10!}</td>
+							  <td>${ms.notice_title!}</td>
+							  <td>${ms.notice_user_name!}</td>
+							  
+							  <td>
+								  <#if ms.notice_depart_name??>
+								  		${ms.notice_depart_name!}
+								  <#else>
+								  		--
+								  </#if>
+							  </td>
+							   <td>
+							   		<#if ms.notice_buss_name??>
+								  		${ms.notice_buss_name!}
+								  <#else>
+								  		--
+								  </#if>
+							   </td>
+							  <td>
+								  <#if (ms.notice_type == 1)>
+								  企业
+								  <#elseif (ms.notice_type == 2)>
+								  部门
+								  <#elseif (ms.notice_type == 3)>
+								  企业、部门
+								  </#if>
+							  </td>
+							  <td>${ms.notice_time!}</td>
+							  <td >
+							   	<#if (ms.notice_tatus == 0)>
+								  未发布
+								  <#elseif (ms.notice_tatus == 1)>
+								  已发布
+								  </#if>
+							  </td>
+							  <td class="action orderNub2" style="text-align:center;">
+								  <!-- Button trigger modal -->
+									<a type="button" class="btn btn-info"  href="${base!}/view/noticeInfo?noticeId=${ms.notice_id!}">
+									  <i class="icon-edit"></i>&nbsp;&nbsp;详细内容
+									</a>
+									<a type="button" class="btn btn-info"  href="${base!}/view/noticeEdit?noticeId=${ms.notice_id!}">
+									  <i class="icon-edit"></i>&nbsp;&nbsp;编辑
+									</a>
+									<button type="button" class="btn btn-info"  onclick="disp_confirm('${ms.notice_id!}')">
+									  <i class="icon-edit"></i>&nbsp;&nbsp;删除
+									</button>
+									<#if (ms.notice_tatus == 0)>
+										<button type="button" class="btn btn-info"  onclick="public_notice('${ms.notice_id!}',1)">
+										  <i class="icon-edit"></i>&nbsp;&nbsp;发布
+										</button>
+									</#if>
+									<#if (ms.notice_tatus == 1)>
+										<button type="button" class="btn btn-info"  onclick="public_notice('${ms.notice_id!}',0)">
+										  <i class="icon-edit"></i>&nbsp;&nbsp;取消发布
+										</button>
+									</#if>
+							  </td>
+		  				</tr>
+		  				</#list>
+		  				</#if>
+		  			</tbody>
+	  			</table>
+	  			
+	  			<!-- 表格下标 页数-->
+	  			<#include "/WEB-INF/jsp/common/_paginate.html">
+	  			   <#if (noticePage.getList().size()> 0) >
+	  			   		<#if time??>
+				  			   		<@paginate currentPage=noticePage.pageNumber totalPage=noticePage.totalPage 
+				  			   		actionUrl="${base}/view/noticeManage?filterTime=${time!}&page="/>
+			  			<#else>
+			  				<@paginate currentPage=1 totalPage=1 actionUrl="${base}/view/noticeManage?page="/>
+		  			   	</#if>
+	  			   <#else>
+	  			  	 <@paginate currentPage=1 totalPage=1 actionUrl="${base}/view/noticeManage?page="/>
+				   </#if>
+  			</div>
+  		</div>
+  	</div>
+  	
+  	 <script type="text/javascript">
+  	function viewEmail(){
+  		$("#old_email").hide();
+  		$("#edit_email").show();
+  	}
+  	function editEmail(){
+  		var notice_email = $("#notice_email").val();
+  		if(notice_email == null || notice_email==""){
+  			alert("请输入邮箱地址！");
+  			return;
+  		}
+  		var url3 ="${base}/view/editEmail?notice_email="+notice_email;
+  		$.ajax({
+            type: "GET",
+            url: url3,
+            dataType: "json",
+            success: function(data){
+            		 var result = data.result;
+            		 if(!result){
+            		 	alert("保存失败，请重试！");
+            		 }else{
+            		   alert("保存成功！");
+            		 }
+            		 window.location.reload();
+            }
+  		});
+  	}
+  	function filter() {
+  		var filterTime = $("#filterTime").val();
+	   	var url ="${base}/view/noticeManage";
+	   	
+	    if(filterTime == null || filterTime==""){
+	   		location.href = url ;
+  		 }else{
+  			location.href = url + "?filterTime=" + filterTime;
+  		 }
+  	}
+    //设定筛选默认值
+	 function show(time){
+	 	$("#filterTime").val(time);
+	 	$("#edit_email").hide();;
+	 }
+	//禁用账号
+		function disp_confirm(noticeId)
+		  {
+		  var url2 ="${base!}/view/deleteNotice?noticeId="+noticeId;
+		  var r=confirm("确认要禁用吗？");
+		  if (r==true)
+		    {
+		    	$.ajax({
+	               type: "GET",
+	               url: url2,
+	               dataType: "json",
+	               success: function(data){
+	               		 var result = data.result;
+	               		 if(!result){
+	               		 	alert("禁用失败，请重试！");
+	               		 }else{
+	               		   alert("禁用成功！");
+	               		 }
+	               		 window.location.href="${base}/view/noticeManage";
+	               }
+			    });
+		    }
+		  }
+	//设置发布状态
+	function public_notice(notice_id,statu){
+		 var url3 ="${base!}/view/publicNotice?notice_id="+notice_id+"&statu="+statu;
+		 $.ajax({
+             type: "GET",
+             url: url3,
+             dataType: "json",
+             success: function(data){
+             		 var result = data.result;
+             		 if(!result){
+             		 	alert("设置失败，请重试！");
+             		 }else{
+             		   alert("设置成功！");
+             		 }
+             		 window.location.href="${base}/view/noticeManage";
+             }
+		    });
+	}
+   </script>
+  </body>
+</html>

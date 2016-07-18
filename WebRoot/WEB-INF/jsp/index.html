@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>网页标题</title>
+<meta name="keywords" content="网页关键词" />
+<meta name="description" content="网页描述" />
+<style type="text/css">
+.form-group {
+	width: 250px;
+	overflow: hidden;
+	float: left;
+}
+</style>
+<script type="text/javascript"
+	src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				var data_s;
+				$("#dataSource").change(
+						function() {
+							s_val = $("#dataSource  option:selected").text();
+
+							switch (s_val) {
+							case "审批接口":
+								$("#roleType").find("option").eq(0).removeAttr(
+										"selected");
+								;
+								$("#roleType").find("option").eq(1).css(
+										"display", "block");
+								$("#roleType").find("option").eq(1).attr(
+										"selected", "selected");
+								$("#roleType").find("option").eq(1).siblings()
+										.css("display", "none");
+								$(".form-group").eq(2).show();
+								break;
+							case "本地库":
+								$("#roleType").find("option").eq(0).attr(
+										"selected", "selected");
+								$("#roleType").find("option").eq(1).css(
+										"display", "none");
+								$("#roleType").find("option").eq(1).siblings()
+										.css("display", "block");
+								$(".form-group").eq(2).hide();
+								break;
+							}
+
+						})
+
+			})
+</script>
+</head>
+<body>
+
+	<div class="form-group">
+		<label for="exampleInputEmail2">数据来源：</label> <select
+			class="form-control" id="dataSource">
+			<option value="1" selected="selected">审批接口</option>
+			<option value="2">本地库</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="exampleInputName2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择用户类型：</label>
+		<select class="form-control" id="roleType">
+			<option value="" style="display:none;">--请选择--</option>
+			<option value="1" selected="selected">办事员</option>
+			<option value="2" style="display:none;">领导</option>
+			<option value="3" style="display:none;">企业</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="exampleInputEmail2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择部门：</label>
+		<select class="form-control" id="departId">
+			<option value="">--请选择--</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+		</select>
+	</div>
+
+
+</body>
+</html>

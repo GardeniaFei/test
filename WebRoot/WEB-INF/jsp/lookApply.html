@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>查看事项</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link href="${base}/resources/stylesheets/application-a07755f5.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="${base}/resources/stylesheets/ebusiness.css" rel="stylesheet" type="text/css">
+    
+    <#include "/WEB-INF/jsp/common/header.html">
+	  <style type="text/css">
+	   .form-horizontal .form-group{
+	   		margin-right: -900px;
+	   }
+	   .col-sm-offset-2 {
+		  margin-left: 22%;
+		}
+		.gone {
+			display:none;
+		}
+		#taleft{
+		  text-align:left;
+		}
+	  </style>
+  </head>
+  
+  <body class="main page">
+    <!-- 标题栏块 -->
+  	<#include "/WEB-INF/jsp/common/_title.html">
+  	
+  	<!-- 主体内容 -->
+  	<div id="wrapper">
+  	
+  		<!-- 左边导航条 -->
+  		<#include "/WEB-INF/jsp/common/_menu.html">
+  	    <@_menu index=2/>
+  	    
+  	    <!-- 表格标题块 -->
+  		<section id="tools">
+	  		<ul class="breadcrumb" id="breadcrumb">
+		  		<li>
+		  			<a href="${base}/applyManage">事项管理</a>
+		  		</li>
+		  		<li class="title">
+		  			<span>查看事项</span>
+		  		</li>
+	  		</ul>
+  		</section>
+  	
+  	    <!-- 内容主体 -->
+  		<div id="content">
+		    <div class="row">
+		  	    <div class="col-md-12 col-md-offset-5">
+		      		<h2>查看事项</h2>
+		      		<br>
+				</div>
+		    </div>
+	   
+	   		<form class="form-horizontal">
+		  	
+			 <div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">所属部门：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  	<#if item??>
+				  		${item.departName!}
+				  	</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+				
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">事项名称：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if item??>
+				  			${item.itemName!}
+				  	
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理对象：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+					  	<#if item??>
+					  		${item.transactionObject!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理条件：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label" id="taleft">
+					  	<#if item??>
+					  		${item.needCondition!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">所需材料：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label" id="taleft">
+					  	<#if item??>
+					  		${item.needMaterial!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理流程：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+					  	<#if item??>
+					  		${item.itemFlow!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办事窗口：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+					  	<#if item??>
+					  		${item.transactionWindow!} 号窗
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">收费标准：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if item??>
+				  			${item.itemCharge!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理依据：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label" id="taleft">
+				  		<#if item??>
+				  			${item.gistLaw!}
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+			
+			<div class="form-group">
+			  	<label for="inputEmail3" class="col-sm-3 control-label">办理时限：</label>
+			  	<div class="col-xs-3">
+				  	<label class="control-label">
+				  		<#if item??>
+				  			${item.timeLimit!} 个工作日
+				  		</#if>
+				  	</label>
+			  	</div>
+		  	</div>
+		  	
+		  	<div class="form-group">
+		  	<div class="col-sm-offset-2 col-sm-10">
+		  	<#if item??>
+		    	<!-- ${item.materialAnnex!} -->
+		    </#if>	
+				  	<input class="btn btn-default gone" type="button" onclick="validate1('${base}/');" value="材料附件" />
+				  	<span style="font-size:24px;color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				  	<#if item??>
+				  		<input type="button" class="btn btn-default gone" onclick="validate(${item.flowAnnex!});" value="流程附件"/>
+				  	<#else>
+				  		<input type="button" class="btn btn-default gone" value="流程附件"/>
+				  	</#if>
+			  	</div>
+		  	</div>
+	  	
+		  	<div class="form-group">
+		    	<div class="col-sm-offset-3 col-sm-10">
+				  	<a href="${base}/applyManage" class="btn btn-primary" role="button">返回列表</a>
+			  	</div>
+		  	</div>
+		  	
+		  </form>
+	   </div>
+	  </div>
+  </body>
+  <script type="text/javascript">
+  	function validate(url) {
+	   	alert("test");
+	   	if(url != null) {
+	   		
+	   	}
+	   	
+   	}
+  	function validate1(url) {
+	   	alert(url);
+	   	window.open (url + "resources/docs/aa.txt");
+	   	//if(url != null) {
+	   		
+	   	//}
+	   	
+   }
+  </script>
+</html>

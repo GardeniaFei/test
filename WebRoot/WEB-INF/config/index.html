@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>配置页面</title>
+	
+    <meta name="content-type" content="text/html; charset=UTF-8">
+	<style>
+	.main{
+		width:800px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.top{
+		width:320px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.content{
+		width:320px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.error{
+		color:red;
+	}
+	</style>
+  </head>
+  
+  <body>
+  	<div class="main">
+   	<div class="top">
+   		<h3>系统名称：${newVersion.appName!}</h3>
+   		<p>当前使用版本：${newVersion.appVersion!}</p>
+   		<#if currentVersion??>
+   			<p>以往使用版本：${currentVersion.appVersion!}</p>
+   		<#else>
+   			<p>以往使用版本：无</p>
+   		</#if>
+   	</div>
+   	<div class="content">
+	   	<h3>配置信息</h3>
+	   	<#if message??>
+	   		<p class="error">${message!}</p>
+	   	</#if>
+	   	<form action="${base}/config/save" method="post">
+	   	<table>
+	   		<tr>
+	   			<th>名称</th>
+	   			<th>配置项</th>
+	   			<th></th>
+	   		</tr>
+	   		<#list configs as config>
+	   		<tr>
+	   			<td>${config.configName!}</td>
+	   			<td>
+	   				<#if config.options??>
+	   					<select name="${config.configKey!}">
+	   					<#list config.options as option>
+	   						<#if config.oldValue??>
+	   							<#if config.oldValue==option>
+	   								<option value="${option!}" selected="selected">${option!}</option>
+	   							<#else>
+	   								<option value="${option!}">${option!}</option>
+	   							</#if>
+	   						<#else>
+	   							<option value="${option!}">${option!}</option>
+	   						</#if>
+	   					</#list>
+	   					</select>
+	   				<#else>
+		   				<#if config.oldValue??>
+		   					<input type="text" value="${config.oldValue!}" name="${config.configKey!}" placeholder="${config.examValue!}">
+		   				<#else>
+		   					<input type="text" value="${config.configValue!}" name="${config.configKey!}" placeholder="${config.examValue!}">
+		   				</#if>
+	   				</#if>
+	   				
+	   			</td>
+	   			<td>
+	   				<#if config.isMust>
+	   					<span class="error">*</span>
+	   				</#if>
+	   			</td>
+	   		</tr>
+	   		</#list>
+	   		<tr>
+	   			<td></td>
+	   			<td><input type="submit" value="提交"></td>
+	   		</tr>
+	   	</table>
+	   	</form>
+   	</div>
+   	</div>
+  </body>
+</html>

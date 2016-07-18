@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>添加通知公告</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+<script type="text/javascript" charset="utf-8" src="${base}/resources/kindeditor-4.1.7/kindeditor.js"></script>
+<script charset="utf-8" src="${base}/resources/kindeditor-4.1.7/lang/zh_CN.js"></script>
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden;
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=10/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/view/noticeManage">通知公告</a></li>
+				<li class="title"><span>添加通知公告</span></li>
+			</ul>
+		</section>
+
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>添加通知公告</h2>
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal" action="${base}/view/addNotice"
+				method="post" id="addnotice">
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人用户类型：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<select class="form-control" id="roleType" name="roleType">
+							<option value="">--请选择--</option>
+							<option value="3">企业</option>
+							<option value="2">市级办事员</option>
+							<option value="1">区级办事员</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group" id="buss_div_id">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人所属企业：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<select class="form-control" id="businessId" name="businessId">
+							<option value="">--请选择--</option>
+							<#if bussInfos??> <#list bussInfos as bus>
+							<option value="${bus.businessId!}">${bus.businessName!}</option>
+							</#list> </#if>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group" id="dept_sj_div_id">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人所属市级部门：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<select class="form-control" id="deptId" name="deptId">
+							<option value="">--请选择--</option>
+							<#if cityDptList??> <#list cityDptList as dept>
+							<option value="${dept.departId!}">${dept.departName!}</option>
+							</#list> </#if>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group" id="dept_qj_div_id">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人所属区级部门：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<select class="form-control" id="deptId_qj" name="deptId_qj">
+							<option value="">--请选择--</option>
+							<#if deptList??> <#list deptList as dept>
+							<option value="${dept.departId!}">${dept.departName!}</option>
+							</#list> </#if>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">用户账户：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+					<select class="form-control" id="userAccount" name="userAccount">
+							<option value="">--请选择--</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">通知主题：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" value=""
+							name="notice_title" id="notice_title" >
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">通知对象：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+					<select class="form-control" id="notice_type" name="notice_type">
+							<option value="">--请选择--</option>
+							<option value="1">企业</option>
+							<option value="2">部门</option>
+							<option value="3">企业和部门</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">内容：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+							<textarea enctype="multipart/form-data" class="TextBox Required" style="width: 300px;height:100px;"  name="veVenue.venue_brief" id="venue_brief" ></textarea>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+						<a href="${base}/view/noticeAddView" class="btn btn-success"
+							role="button">重置</a>
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="addbtn"  value="添加" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" id="back">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var options = {
+			filterMode : false,
+			items : ['preview','cut', 'copy', 'paste',
+                'plainpaste','|','justifyleft',
+				'justifycenter',
+				'justifyright',
+				'justifyfull', '|', 'forecolor','|',
+				'bold', 'italic','underline','fullscreen'
+			 ],
+			afterBlur : function() {
+				this.sync();
+				},
+			themeType : 'oschina',
+			resizeType : 1,
+			shadowMode : false,
+			allowPreviewEmoticons : false,
+			allowUpload : false, //允许上传图片
+			allowImageUpload : true,
+			allowImageRemote : false,
+			uploadJson : ''//上传路径
+		};
+		
+		KindEditor.ready(function(K) {
+			window.editor = K.create('#venue_brief', options);
+		});
+		</script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		   var a = 0;
+	
+		$("#roleType").on("change",function(){
+			var roleType = document.getElementById("roleType");
+			var bussDiv = document.getElementById("buss_div_id");
+			var dpts_qj = $("#dept_qj_div_id");
+			var dpts_sj = $("#dept_sj_div_id");
+			if (roleType != null) {
+				if (roleType.value == "2") {
+					bussDiv.style.display = "none";
+					dpts_qj.hide();
+					dpts_sj.show();
+				} else if (roleType.value == "3") {
+					bussDiv.style.display = "block";
+					dpts_qj.hide();
+					dpts_sj.hide();
+				}else if (roleType.value == "1") {
+					bussDiv.style.display = "none";
+					dpts_qj.show();
+					dpts_sj.hide();
+				}
+			}
+			//	2 - 市级办事员、 3 - 企业，1-区级办事员
+		});
+		function selChangeListener() {
+			var roleType = document.getElementById("roleType");
+			var bussDiv = document.getElementById("buss_div_id");
+			var dpts_qj = document.getElementById("dept_qj_div_id");
+			var dpts_sj = document.getElementById("dept_sj_div_id");
+			if (roleType != null) {
+				if (roleType.value == "2") {
+					bussDiv.style.display = "none";
+					dpts_qj.style.disply = "none";
+					dpts_sj.style.disply = "block";
+				} else if (roleType.value == "3") {
+					bussDiv.style.display = "block";
+					dpts_qj.style.disply = "none";
+					dpts_sj.style.disply = "none";
+				}else if (roleType.value == "1") {
+					bussDiv.style.display = "none";
+					dpts_qj.style.disply = "block";
+					dpts_sj.style.disply = "none";
+				}
+			}
+			//	2 - 领导、 3 - 企业
+		}
+
+		$("#deptId_qj").on("change",function(){
+			filterItems();
+		});
+		$("#deptId_sj").on("change",function(){
+			filterItems();
+		});
+		$("#businessId").on("change",function(){
+			filterItems();
+		});
+		$("#back").on("click", function(){
+		  var url ="${base}/view/noticeManage";
+		  var r=confirm("确定取消添加用户吗？");
+		  if (r==true)
+		    {
+		    	location.href=url;
+		    }
+	    });
+	    
+	    $("#addbtn").on("click", function(){
+			var userCode = $("#userAccount").val();//用户账户
+			var roleType = $("#roleType").val();//用户类型
+		    var notice_type = $("#notice_type").val();//通知类型
+		    var notice_title = $("#notice_title").val();//通知主题
+		    var noticeEditor = $("#venue_brief").val();
+		    var bussId = $("#businessId").val();
+		    //	2 - 领导、 3 - 企业
+			if (roleType == 0) {
+				alert("请选择用户类型！");
+				return;
+			}else{
+				if(roleType == 3){
+					if(!validate_required(bussId)){
+						alert("请先添加企业！");
+						return;
+					}
+				}
+			}
+
+			if (!validate_required(userCode)) {
+				alert("请选择有效账户！");
+				return;
+			}
+			document.getElementById("addnotice").submit();
+		
+		});
+		//不能为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		//是否含有中文（不包含日文和韩文）1-15个汉字
+		function isChineseChar(str){   
+		   //var reg = /^\s*[\u4e00-\u9fa5]{1,}[\u4e00-\u9fa5.·]{0,15}[\u4e00-\u9fa5]{1,}\s*$/;
+		   //var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]{2,15}$/;//是否含有中文（也包含日文和韩文）
+		   var reg =/^[\u4e00-\u9fa5]{1,15}$/;//只有汉字
+		   return reg.test(str);
+		}
+		//同理，是否含有全角符号的函数
+		function isFullwidthChar(str){
+		   var reg = /[\uFF00-\uFFEF]/;
+		   return reg.test(str);
+		} 
+		//只能英文和数字字符,3-10个字符之间，可有特殊符号.@-_
+		function CheckPwd(str){
+			//var filter = /^[a-zA-Z0-9]{1,10}$/;
+			var filter = /^(\w){1,20}$/; 
+			return filter.test(str);
+		}
+		//检查手机号码
+		function checkPhone(str){
+			var reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+			return reg.test(str);
+		}
+		//检查邮箱
+	   function isEmail(value) {
+        var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        return reg.test(value);
+  		  };
+	});
+	
+	//显示用户账户选择
+	function filterItems() {
+		var businessId = $("#businessId").val();
+		var deptId_qj = $("#deptId_qj").val();
+		var deptId_sj = $("#deptId_sj").val();
+		var roleType = $("#roleType").val();
+		var furl = "${base}/view/getUserByType?deptId_qj=" + deptId_qj+ "&deptId_sj=" + deptId_sj
+				+ "&roleType=" + roleType+ "&buss_id=" + businessId;
+
+		$.ajax({
+			type : "GET",
+			url : furl,
+			dataType : "json",
+			success : function(data) {
+				var flag = data.flag;
+				var html = "";
+				if(flag  == 1){
+					$.each(data.userInfos, function(commentIndex, comment) {
+						var code = comment['USER_ACCOUNT'];
+						var name = comment['USER_NAME'];
+						html += "<option value='"+code+"'>"
+								+ code +" "+name+ "</option>";
+					});
+					$('#userAccount').html(html);
+				}else{
+					$('#userAccount').html(html);
+				}
+			},
+		});
+	}
+	</script>
+</body>
+</html>

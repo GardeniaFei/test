@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>编辑通知公告</title>
+
+<meta name="keywords" content="keyword1,keyword2,keyword3">
+<meta name="description" content="this is my page">
+<meta name="content-type" content="text/html; charset=UTF-8">
+<link href="${base}/resources/stylesheets/application-a07755f5.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+<link href="${base}/resources/stylesheets/ebusiness.css"
+	rel="stylesheet" type="text/css">
+<script type="text/javascript" charset="utf-8" src="${base}/resources/kindeditor-4.1.7/kindeditor.js"></script>
+<script charset="utf-8" src="${base}/resources/kindeditor-4.1.7/lang/zh_CN.js"></script>
+
+<#include "/WEB-INF/jsp/common/header.html">
+<style type="text/css">
+	.form-horizontal .form-group {
+		margin-right: -900px;
+	}
+	#content{
+		overflow-x:hidden;
+	}
+</style>
+</head>
+
+<body class="main page">
+	<!-- 标题栏块 -->
+	<#include "/WEB-INF/jsp/common/_title.html">
+
+	<!-- 主体内容 -->
+	<div id="wrapper">
+
+		<!-- 左边导航条 -->
+		<#include "/WEB-INF/jsp/common/_menu.html"> <@_menu index=10/>
+
+		<!-- 表格标题块 -->
+		<section id="tools">
+			<ul class="breadcrumb" id="breadcrumb">
+				<li><a href="${base}/view/noticeManage">通知公告</a></li>
+				<li class="title"><span>编辑通知公告</span></li>
+			</ul>
+		</section>
+
+		<!-- 内容主体 -->
+		<div id="content">
+			<div class="row">
+				<div class="col-md-12 col-md-offset-5">
+					<h2>编辑通知公告</h2>
+				</div>
+			</div>
+			<div class="col-md-15 col-md-offset-3">
+				</br>
+		    </div>
+		
+			<form class="form-horizontal" action="${base}/view/noticeSave"
+				method="post" id="editnotice">
+
+				<div class="form-group" id="buss_div_id">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人所属企业：</label>
+					<div class="col-xs-3">
+						<label class="control-label">
+					  	<#if notice.notice_buss_name??>
+					  		${notice.notice_buss_name!}
+					  	<#else>
+					  		 无
+					  	</#if>
+					  	</label>
+					</div>
+				</div>
+				
+				<div class="form-group" id="dept_qj_div_id">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人所属部门：</label>
+					<div class="col-xs-3">
+						<label class="control-label">
+					  	<#if notice.notice_depart_name??>
+					  		${notice.notice_depart_name!}
+					  	<#else>
+					  	  无
+					  	</#if>
+					  	</label>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">发起人姓名：</label>
+					<div class="col-xs-3">
+						<label class="control-label">
+					  	<#if notice??>
+					  		${notice.notice_user_code!}   ${notice.notice_user_name!}
+					  	</#if>
+					  	</label>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">通知主题：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+						<input class="form-control" type="text" value="${notice.notice_title!}"
+							name="notice_title" id="notice_title" >
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">通知对象：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+					<select class="form-control" id="notice_type" name="notice_type">
+							<option value="">--请选择--</option>
+							<option value="1">企业</option>
+							<option value="2">部门</option>
+							<option value="3">企业和部门</option>
+						</select>
+						<input type="hidden" value="${notice.notice_type!}"  id="type_old">
+						<input type="hidden" value="${notice.notice_id!}"  id="noticeId" name="noticeId">
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">内容：</label>
+					<span style="font-size:24px;color:red">*</span>
+					<div class="col-xs-3">
+							<textarea enctype="multipart/form-data" class="TextBox Required" style="width: 300px;height:100px;"  name="veVenue.venue_brief" id="venue_brief" >${notice.notice_content!}</textarea>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="inputEmail3" class="col-sm-2 control-label">&nbsp;</label>
+					<div class="col-sm-offset-3 col-sm-10">
+					    <span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<input class="btn btn-primary" type="button" id="editbtn"  value="保存" />
+						<span style="font-size:12px;">&nbsp;&nbsp;&nbsp;</span>
+						<a class="btn btn-default" role="button" id="back">返回</a>
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var options = {
+			filterMode : false,
+			items : ['preview','cut', 'copy', 'paste',
+                'plainpaste','|','justifyleft',
+				'justifycenter',
+				'justifyright',
+				'justifyfull', '|', 'forecolor','|',
+				'bold', 'italic','underline','fullscreen'
+			 ],
+			afterBlur : function() {
+				this.sync();
+				},
+			themeType : 'oschina',
+			resizeType : 1,
+			shadowMode : false,
+			allowPreviewEmoticons : false,
+			allowUpload : false, //允许上传图片
+			allowImageUpload : true,
+			allowImageRemote : false,
+			uploadJson : ''//上传路径
+		};
+		
+		KindEditor.ready(function(K) {
+			window.editor = K.create('#venue_brief', options);
+		});
+		</script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var type_old = $("#type_old").val();
+		$("#notice_type").val(type_old);//默认初始值
+	    
+	    $("#editbtn").on("click", function(){
+			var noticeId = $("#noticeId").val();//用户账户
+		    var notice_type = $("#notice_type").val();//通知类型
+		    var notice_title = $("#notice_title").val();//通知主题
+		    var noticeEditor = $("#venue_brief").val();
+
+			if (!validate_required(notice_type)) {
+				alert("请选择发布对象！");
+				return;
+			}
+			if (!validate_required(notice_title)) {
+				alert("请填写主题！");
+				return;
+			}
+			if (!validate_required(noticeEditor)) {
+				alert("请填写内容！");
+				return;
+			}
+			document.getElementById("editnotice").submit();
+		
+		});
+		//不能为空
+		function validate_required(string) {
+			if (string == null || string == "") {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		//是否含有中文（不包含日文和韩文）1-15个汉字
+		function isChineseChar(str){   
+		   //var reg = /^\s*[\u4e00-\u9fa5]{1,}[\u4e00-\u9fa5.·]{0,15}[\u4e00-\u9fa5]{1,}\s*$/;
+		   //var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]{2,15}$/;//是否含有中文（也包含日文和韩文）
+		   var reg =/^[\u4e00-\u9fa5]{1,15}$/;//只有汉字
+		   return reg.test(str);
+		}
+		//同理，是否含有全角符号的函数
+		function isFullwidthChar(str){
+		   var reg = /[\uFF00-\uFFEF]/;
+		   return reg.test(str);
+		} 
+		//只能英文和数字字符,3-10个字符之间，可有特殊符号.@-_
+		function CheckPwd(str){
+			//var filter = /^[a-zA-Z0-9]{1,10}$/;
+			var filter = /^(\w){1,20}$/; 
+			return filter.test(str);
+		}
+		//检查手机号码
+		function checkPhone(str){
+			var reg = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+			return reg.test(str);
+		}
+		//检查邮箱
+	   function isEmail(value) {
+        var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        return reg.test(value);
+  		  };
+	});
+	
+	$("#back").on("click", function(){
+		  var url ="${base}/view/noticeManage";
+		  var r=confirm("确定取消编辑用户吗？");
+		  if (r==true)
+		    {
+		    	location.href=url;
+		    }
+	    });
+	
+	</script>
+</body>
+</html>
